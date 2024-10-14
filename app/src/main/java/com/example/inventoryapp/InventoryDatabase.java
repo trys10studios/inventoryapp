@@ -68,7 +68,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
 
-                InventoryItem item = new InventoryItem(id, name, quantity);
+                InventoryItem item = new InventoryItem(name, id, quantity);
                 itemList.add(item);
             } while (cursor.moveToNext());
         }
