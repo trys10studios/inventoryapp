@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">InventoryApp</string>
+    <string name="login">Login</string>
+    <string name="enter_user_name">Enter User Name</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="data_inventory">Data Inventory</string>
+    <string name="add_new_item">Add New Item</string>
+    <string name="delete">Delete</string>
+    <string name="item">Item:</string>
+    <string name="item_name">Item Name: </string>
+    <string name="quantity">Qty:</string>
+    <string name="description">Description:</string>
+    <string name="item_quantity">0</string>
+    <string name="item_description">Item Description</string>
+    <string name="sms_permissions_statement">This app requires SMS permissions to send notifications when the inventory is at zero.</string>
+    <string name="grant_sms_permissions">Grant SMS Permission"</string>
+    <string name="increase_quantity">Increase Quantity</string>
+    <string name="decrease_quantity">Decrease Quantity</string>
+    <string name="quantity_count">0</string>
+    <string name="remove_item">Remove Item</string>
+    <string name="description_placeholder">Description Placeholder</string>
+</resources>
