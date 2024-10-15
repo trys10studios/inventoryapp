@@ -12,7 +12,7 @@ import java.util.List;
 // InventoryDatabase.java
 public class InventoryDatabase extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "users.db";
+    private static final String DATABASE_NAME = "inventory.db";
     private static final int VERSION = 1;
 
     // Constructor
@@ -22,40 +22,30 @@ public class InventoryDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create the "users" table
-        db.execSQL("CREATE TABLE users (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "username TEXT, password TEXT)");
+        // Create the "inventory" table
+        db.execSQL("CREATE TABLE inventory (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT, quantity INTEGER, description TEXT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop the table if it exists and recreate it
-        db.execSQL("DROP TABLE IF EXISTS users");
+        db.execSQL("DROP TABLE IF EXISTS inventory");
         onCreate(db);
     }
 
-    // Method to add a new user
-    public boolean addUser(String username, String password) {
+    // Method to add a new inventory item
+    public void insertInventoryItem(InventoryItem newItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("username", username);
-        values.put("password", password);
-        long result = db.insert("users", null, values);
-        return result != -1; // Returns true if the user was successfully added
+        values.put("name", newItem.getItemName());
+        values.put("quantity", newItem.getItemQuantity());
+        values.put("description", newItem.getItemDescription());
+
+        db.insert("inventory", null, values);
     }
 
-    // Method to check if the user exists
-    public boolean checkUser(String username, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?", new String[] {username, password});
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        return exists;
-    }
-
-    public void insertInventoryItem(InventoryItem newItem) {
-    }
-
+    // Method to retrieve all inventory items
     public List<InventoryItem> getAllInventoryItems() {
         List<InventoryItem> itemList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -67,8 +57,9 @@ public class InventoryDatabase extends SQLiteOpenHelper {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
 
-                InventoryItem item = new InventoryItem(name, id, quantity);
+                InventoryItem item = new InventoryItem(name, id, quantity, description);
                 itemList.add(item);
             } while (cursor.moveToNext());
         }
@@ -77,10 +68,20 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         return itemList;
     }
 
+    // Method to delete an inventory item by ID
     public void deleteInventoryItem(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("inventory", "_id = ?", new String[]{String.valueOf(id)});
     }
 
+    // Method to update an inventory item
     public void updateInventoryItem(InventoryItem updatedItem) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", updatedItem.getItemName());
+        values.put("quantity", updatedItem.getItemQuantity());
+        values.put("description", updatedItem.getItemDescription());
 
+        db.update("inventory", values, "_id = ?", new String[]{String.valueOf(updatedItem.getItemId())});
     }
 }

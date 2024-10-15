@@ -15,7 +15,7 @@
 
     <!--Item Text-->
     <TextView
-        android:id="@+id/itemName"
+        android:id="@+id/item_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

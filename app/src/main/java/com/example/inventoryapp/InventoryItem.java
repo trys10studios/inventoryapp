@@ -2,15 +2,44 @@ package com.example.inventoryapp;
 
 public class InventoryItem {
     private String itemName;
+    private int id;
     private int quantity;
-    private double price;
+    private String description;
 
-    public InventoryItem(String name, int id, int quantity) {
-
+    // Constructor
+    public InventoryItem(String itemName, int id, int quantity, String description) {
+        this.itemName = itemName;
+        this.id = id;
+        this.quantity = quantity;
+        this.description = description;
     }
 
-    public void setId(int id) {
+    // Setters
+    public void setItemName(String newItemName){
+        itemName = newItemName;
     }
 
-    // Constructor, getters, and setters
+    public void setId(int newId) {
+        id = newId;
+    }
+
+    public void setQuantity(int newQuantity){
+        quantity = newQuantity;
+    }
+
+    // Getters
+    public String getItemName() {
+        return itemName;
+    }
+    public int getItemId(){
+        return id;
+    }
+
+    public int getItemQuantity() {
+        return quantity;
+    }
+
+    public String getItemDescription() {
+        return description;
+    }
 }

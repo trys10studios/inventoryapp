@@ -2,6 +2,7 @@ package com.example.inventoryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
             if (userDatabase.checkUser(username, password)) {
                 // User exists, proceed with login
                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                // Start the InventoryActivity after successful login
+                Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
             } else {
                 // User not found, show error
                 Toast.makeText(MainActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
