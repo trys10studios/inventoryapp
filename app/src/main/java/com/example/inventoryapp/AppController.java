@@ -14,7 +14,7 @@ public class AppController {
     public AppController(Context context, NotificationHandler notificationHandler) {
         this.context = context;
         this.notificationHandler = notificationHandler; // Store the reference
-        userDatabase = new UserDatabase(context); // Initialize your user database
+        userDatabase = new UserDatabase(context); // Initialize user database
         inventoryDatabase = new InventoryDatabase((Context) context); // Initialize inventory database
     }
 

@@ -86,7 +86,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add New Item");
 
-        // Set the dialog view with custom layout (you'll create this layout)
+        // Set the dialog view with custom layout
         final View customLayout = getLayoutInflater().inflate(R.layout.add_item, null);
         builder.setView(customLayout);
 
