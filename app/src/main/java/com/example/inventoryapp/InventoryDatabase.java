@@ -14,6 +14,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "inventory.db";
     private static final int VERSION = 1;
+    private NotificationHandler notificationHandler;
 
     // Constructor
     public InventoryDatabase(Context context) {
@@ -88,15 +89,16 @@ public class InventoryDatabase extends SQLiteOpenHelper {
 
         db.update("inventory", values, "_id = ?", new String[]{String.valueOf(updatedItem.getItemId())});
     }
+
     // Method to check inventory and notify if any item is zero
-    public void checkInventoryAndNotify(MainActivity mainActivity) {
+    public void checkInventoryAndNotify(NotificationHandler notificationHandler) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM inventory WHERE quantity = 0", null);
 
         if (cursor.moveToFirst()) {
             // If there's at least one item with zero quantity
             String message = "Alert: Some items in your inventory have reached zero!";
-            mainActivity.sendSms(message); // Notify via SMS
+            notificationHandler.sendNotification(message); // Use notification handler to send notification
         }
 
         cursor.close();

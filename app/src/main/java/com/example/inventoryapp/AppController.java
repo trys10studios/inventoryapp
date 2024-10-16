@@ -5,14 +5,17 @@ import java.util.List;
 
 public class AppController {
 
+    private final NotificationHandler notificationHandler;
     private UserDatabase userDatabase;
     private InventoryDatabase inventoryDatabase;
     private Context context;
+    private InventoryActivity inventoryActivity; // Hold a reference to InventoryActivity
 
-    public AppController(Context context) {
+    public AppController(Context context, NotificationHandler notificationHandler) {
         this.context = context;
+        this.notificationHandler = notificationHandler; // Store the reference
         userDatabase = new UserDatabase(context); // Initialize your user database
-        inventoryDatabase = new InventoryDatabase(context); // Initialize your inventory database
+        inventoryDatabase = new InventoryDatabase((Context) context); // Initialize inventory database
     }
 
     /* User Management */
@@ -57,5 +60,9 @@ public class AppController {
         InventoryItem updatedItem = new InventoryItem(itemName, id, quantity, description);
         updatedItem.setId(id);
         inventoryDatabase.updateInventoryItem(updatedItem);
+    }
+    // Method to check inventory and notify
+    public void checkInventoryAndNotify() {
+        inventoryDatabase.checkInventoryAndNotify(notificationHandler); // Pass notificationHandler
     }
 }

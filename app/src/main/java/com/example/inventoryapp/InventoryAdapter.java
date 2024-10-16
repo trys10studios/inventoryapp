@@ -1,19 +1,15 @@
 package com.example.inventoryapp;
 
-import android.Manifest;
+import android.app.NotificationManager;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -21,14 +17,16 @@ import java.util.List;
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
     private final List<InventoryItem> itemList;
     private final InventoryDatabase inventoryDatabase;
-    private final SmsSender smsSender;
     private final Context context; // Store the context
+    private final NotificationHandler notificationHandler; // Add this to call sendSms
+    private static final String CHANNEL_ID = "inventory_notifications";
 
-    public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase, SmsSender smsSender, Context context) {
+    public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase, Context context,
+                            NotificationHandler notificationHandler) {
         this.itemList = itemList;
         this.inventoryDatabase = inventoryDatabase;
-        this.smsSender = smsSender;
         this.context = context; // Initialize the context
+        this.notificationHandler = notificationHandler; // Initialize the SmsSender interface
     }
 
     @NonNull
@@ -113,20 +111,17 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     }
 
     // Method to send SMS notification
-    private void sendSmsNotification(String itemName) {
-        String message = "Inventory alert: " + itemName + " is out of stock!";
-        Log.d("InventoryAdapter", "Sending SMS: " + message);
+    private void sendSmsNotification(String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("Inventory Alert")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true); // Automatically remove the notification when clicked
 
-        if (smsSender != null) {
-            smsSender.sendSms(message); // Call the method in InventoryActivity to send SMS
-        } else {
-            Toast.makeText(context, "SMS sender is not available", Toast.LENGTH_SHORT).show();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build()); // Use a unique ID
         }
-    }
-
-    // Method to retrieve the saved phone number
-    private String getPhoneNumber() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("default_phone_number", null); // Returns null if not found
     }
 }
