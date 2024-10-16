@@ -35,7 +35,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         // Fetch inventory items from the database
         itemList = inventoryDatabase.getAllInventoryItems(); // Store it in the member variable
-        inventoryAdapter = new InventoryAdapter(itemList);
+        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase);
         recyclerView.setAdapter(inventoryAdapter);
 
         // Handle the Add Button click
@@ -67,21 +67,18 @@ public class InventoryActivity extends AppCompatActivity {
         builder.setPositiveButton("Add", (dialog, which) -> {
             // Get user input
             EditText itemNameInput = customLayout.findViewById(R.id.item_name_input);
-            EditText itemIDInput = customLayout.findViewById(R.id.id_number);
             EditText itemQuantityInput = customLayout.findViewById(R.id.quantity_count);
             EditText itemDescriptionInput = customLayout.findViewById(R.id.item_description_input);
 
             String name = itemNameInput.getText().toString();
             String quantityString = itemQuantityInput.getText().toString();
-            String idString = itemIDInput.getText().toString();
             String description = itemDescriptionInput.getText().toString();
 
             try {
                 int quantity = Integer.parseInt(quantityString);
-                int id = Integer.parseInt(idString);
 
                 // Create new InventoryItem and insert it into the database
-                InventoryItem newItem = new InventoryItem(name, id, quantity, description);
+                InventoryItem newItem = new InventoryItem(name, 0, quantity, description); // id zero due to auto-increment
                 inventoryDatabase.insertInventoryItem(newItem);
 
                 // Refresh the list in the RecyclerView

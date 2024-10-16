@@ -39,11 +39,14 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", newItem.getItemName());
-        values.put("id", newItem.getItemId());
         values.put("quantity", newItem.getItemQuantity());
         values.put("description", newItem.getItemDescription());
 
-        db.insert("inventory", null, values);
+        // Insert into the database and get the new row's id
+        long newId = db.insert("inventory", null, values);
+
+        // Set the auto-generated id back to the InventoryItem object
+        newItem.setId((int) newId);
     }
 
     // Method to retrieve all inventory items
@@ -80,7 +83,6 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", updatedItem.getItemName());
-        values.put("id", updatedItem.getItemId());
         values.put("quantity", updatedItem.getItemQuantity());
         values.put("description", updatedItem.getItemDescription());
 

@@ -37,8 +37,8 @@ public class AppController {
     /* Inventory Management */
 
     // Method to add a new inventory item
-    public void addInventoryItem(String itemName, int id, int quantity, String description) {
-        InventoryItem newItem = new InventoryItem(itemName, id, quantity, description);
+    public void addInventoryItem(String itemName, int quantity, String description) {
+        InventoryItem newItem = new InventoryItem(itemName, 0, quantity, description); // ID is 0 because it's auto-incremented
         inventoryDatabase.insertInventoryItem(newItem);
     }
 

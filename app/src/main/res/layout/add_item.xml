@@ -30,31 +30,6 @@
         app:layout_constraintTop_toTopOf="@id/item_name"
         app:layout_constraintBottom_toBottomOf="@id/item_name"/>
 
-    <!-- ID TextView -->
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/id"
-        android:textSize="25sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_name"
-        app:layout_constraintBottom_toTopOf="@id/quantity"
-        app:layout_constraintEnd_toStartOf="@id/id_number"/>
-
-    <!-- ID EditText -->
-    <EditText
-        android:id="@+id/id_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/quantity_count"
-        android:textSize="25sp"
-        android:inputType="text"
-        app:layout_constraintStart_toEndOf="@id/id"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/id"
-        app:layout_constraintTop_toBottomOf="@id/item_name"/>
-
     <!-- Quantity TextView -->
     <TextView
         android:id="@+id/quantity"
