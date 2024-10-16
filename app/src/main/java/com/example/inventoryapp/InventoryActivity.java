@@ -1,6 +1,11 @@
 package com.example.inventoryapp;
 
+import android.Manifest;
+import android.app.PendingIntent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,12 +14,13 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class InventoryActivity extends AppCompatActivity {
+public class InventoryActivity extends AppCompatActivity implements SmsSender {
     private InventoryDatabase inventoryDatabase;
     private InventoryAdapter inventoryAdapter;
     private List<InventoryItem> itemList;
@@ -29,13 +35,15 @@ public class InventoryActivity extends AppCompatActivity {
         inventoryDatabase = new InventoryDatabase(this);
         sessionManager = new SessionManager(this);
 
+        checkSmsPermission(); // Check SMS permission
+
         // Initialize the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Fetch inventory items from the database
         itemList = inventoryDatabase.getAllInventoryItems(); // Store it in the member variable
-        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase);
+        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase, this, this);
         recyclerView.setAdapter(inventoryAdapter);
 
         // Handle the Add Button click
@@ -91,5 +99,29 @@ public class InventoryActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
+    }
+
+    private void checkSmsPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
+        }
+    }
+
+    @Override
+    public void sendSms(String message) {
+        String phoneNumber = getPhoneNumber(); // Implement this method to retrieve the phone number.
+        if (phoneNumber != null) {
+            SmsManager smsManager = SmsManager.getDefault();
+            PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT"), PendingIntent.FLAG_IMMUTABLE);
+            smsManager.sendTextMessage(phoneNumber, null, message, sentIntent, null);
+            Toast.makeText(this, "SMS sent: " + message, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Phone number not available!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getPhoneNumber() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        return sharedPreferences.getString("phoneNumber", null); // Assuming "phoneNumber" is the key
     }
 }

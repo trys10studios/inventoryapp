@@ -1,23 +1,34 @@
 package com.example.inventoryapp;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
-    private List<InventoryItem> itemList;
-    private InventoryDatabase inventoryDatabase;
+    private final List<InventoryItem> itemList;
+    private final InventoryDatabase inventoryDatabase;
+    private final SmsSender smsSender;
+    private final Context context; // Store the context
 
-    public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase) {
+    public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase, SmsSender smsSender, Context context) {
         this.itemList = itemList;
         this.inventoryDatabase = inventoryDatabase;
+        this.smsSender = smsSender;
+        this.context = context; // Initialize the context
     }
 
     @NonNull
@@ -61,6 +72,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
                 // Notify that the item has changed
                 notifyItemChanged(position);
             }
+            if (newQuantity == 0) {
+                // Send SMS notification
+                sendSmsNotification(currentItem.getItemName());
+            }
         });
 
         // Delete button functionality
@@ -95,5 +110,23 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             decreaseButton = itemView.findViewById(R.id.decreaseButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
         }
+    }
+
+    // Method to send SMS notification
+    private void sendSmsNotification(String itemName) {
+        String message = "Inventory alert: " + itemName + " is out of stock!";
+        Log.d("InventoryAdapter", "Sending SMS: " + message);
+
+        if (smsSender != null) {
+            smsSender.sendSms(message); // Call the method in InventoryActivity to send SMS
+        } else {
+            Toast.makeText(context, "SMS sender is not available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Method to retrieve the saved phone number
+    private String getPhoneNumber() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("default_phone_number", null); // Returns null if not found
     }
 }

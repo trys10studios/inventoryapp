@@ -1,30 +1,32 @@
 package com.example.inventoryapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.Manifest;
 
-import android.telephony.SmsManager;
-
-import androidx.annotation.NonNull;
-
-import android.content.pm.PackageManager;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_SEND_SMS = 101;
     private EditText usernameInput, passwordInput;
     private UserDatabase userDatabase;
-    private SessionManager sessionManager; // Add SessionManager
-    private static final int REQUEST_CODE_SEND_SMS = 101;
-    private Button requestPermissionButton;
-    private EditText phoneNumberInput, messageInput;
-    private TextView notificationStatus;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +38,15 @@ public class MainActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.enterPassword);
         Button loginButton = findViewById(R.id.loginButton);
         Button signUpButton = findViewById(R.id.createAccount);
-
-        requestPermissionButton = findViewById(R.id.requestPermissionButton);
-        // Set up button click listener to request SMS permission
-        requestPermissionButton.setOnClickListener(v -> requestSmsPermission());
-        notificationStatus = findViewById(R.id.notificationStatus);
+        Button requestPermissionButton = findViewById(R.id.requestPermissionButton);
+        TextView notificationStatus = findViewById(R.id.notificationStatus);
 
         // Initialize the database and session manager
         userDatabase = new UserDatabase(this);
-        sessionManager = new SessionManager(this); // Initialize SessionManager
+        sessionManager = new SessionManager(this);
+
+        // Request SMS permissions
+        requestPermissions();
 
         // Handle login button click
         loginButton.setOnClickListener(v -> {
@@ -52,17 +54,12 @@ public class MainActivity extends AppCompatActivity {
             String password = passwordInput.getText().toString();
 
             if (userDatabase.checkUser(username, password)) {
-                // User exists, proceed with login
                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                // Create a session for the logged-in user
-                sessionManager.createLoginSession(username); // Save username in session
-
-                // Start the InventoryActivity after successful login
+                sessionManager.createLoginSession(username);
                 Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
                 startActivity(intent);
-                finish(); // Close MainActivity
+                finish();
             } else {
-                // User not found, show error
                 Toast.makeText(MainActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
             }
         });
@@ -74,58 +71,38 @@ public class MainActivity extends AppCompatActivity {
 
             if (userDatabase.addUser(username, password)) {
                 Toast.makeText(MainActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-                // Optionally, you can log in the user immediately after sign-up
-                sessionManager.createLoginSession(username); // Save username in session
+                sessionManager.createLoginSession(username);
                 Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
                 startActivity(intent);
-                finish(); // Close MainActivity
+                finish();
             } else {
                 Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    // This method will be called when the user chooses to log out
-    public void logoutUser() {
-        sessionManager.logoutUser();
-        // Optionally, navigate back to login screen or show a message
-        Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
+    private void requestPermissions() {
+        String[] permissions = {
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.READ_SMS,
+                Manifest.permission.READ_PHONE_NUMBERS,
+                Manifest.permission.SEND_SMS
+        };
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sessionManager.logoutUser();
-    }
-
-    private void checkSmsPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_SEND_SMS);
+        // Check which permissions are already granted
+        List<String> permissionsNeeded = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsNeeded.add(permission);
+            }
         }
-    }
 
-    private void sendSms(String phoneNumber, String message) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-            Toast.makeText(this, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+        // Request the permissions that are not granted
+        if (!permissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsNeeded.toArray(new String[0]), REQUEST_CODE_SEND_SMS);
         } else {
-            Toast.makeText(this, "Permission not granted to send SMS", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void requestSmsPermission() {
-        // Check if the SMS permission is already granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            // Request SMS permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_SEND_SMS);
-        } else {
-            // Permission already granted
-            Toast.makeText(this, "SMS permission already granted.", Toast.LENGTH_SHORT).show();
-            notificationStatus.setText("SMS permission already granted.");
+            // All permissions are already granted
+            Toast.makeText(this, "All permissions are already granted.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -135,9 +112,35 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_SEND_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission granted! You can now send SMS.", Toast.LENGTH_SHORT).show();
+                String phoneNumber = getPhoneNumber(); // Retrieve the phone number after permission is granted
             } else {
                 Toast.makeText(this, "Permission denied! SMS functionality will be disabled.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public String getPhoneNumber() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("default_phone_number", null); // Returns null if not found
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sessionManager.logoutUser();
+    }
+
+    public void sendSms(String message) {
+        String phoneNumber = getPhoneNumber(); // Retrieve the saved phone number
+        if (phoneNumber != null) {
+            SmsManager smsManager = SmsManager.getDefault();
+            PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT"), PendingIntent.FLAG_IMMUTABLE);
+            smsManager.sendTextMessage(phoneNumber, null, message, sentIntent, null);
+
+            // Register a BroadcastReceiver to listen for the SMS sent status
+            registerReceiver(new SmsBroadcastReceiver(), new IntentFilter("SMS_SENT"));
+        } else {
+            Toast.makeText(this, "Phone number not available!", Toast.LENGTH_SHORT).show();
         }
     }
 }
