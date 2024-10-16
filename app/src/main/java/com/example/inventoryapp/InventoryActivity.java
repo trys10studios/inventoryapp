@@ -43,7 +43,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         // Initialize AppController with this activity as the notification handler
         AppController appController = new AppController(this, this);
 
-        // Example usage: checking inventory and notifying
+        // Check inventory and notify
         appController.checkInventoryAndNotify();
 
         // Initialize the database and session manager

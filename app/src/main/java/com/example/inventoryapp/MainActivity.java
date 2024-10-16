@@ -79,9 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestPermissions() {
         String[] permissions = {
-                Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.READ_SMS,
-                Manifest.permission.READ_PHONE_NUMBERS,
                 Manifest.permission.SEND_SMS
         };
 
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_SEND_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission granted! You can now send SMS.", Toast.LENGTH_SHORT).show();
-                String phoneNumber = getPhoneNumber(); // Retrieve the phone number after permission is granted
+                // No need to get the phone number after permission is granted
             } else {
                 Toast.makeText(this, "Permission denied! SMS functionality will be disabled.", Toast.LENGTH_SHORT).show();
             }

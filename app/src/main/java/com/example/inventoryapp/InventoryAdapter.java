@@ -114,7 +114,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     private void sendSmsNotification(String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("Inventory Alert")
+                .setContentTitle("Inventory Alert: Item At Zero Stock!")
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true); // Automatically remove the notification when clicked

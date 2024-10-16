@@ -97,7 +97,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             // If there's at least one item with zero quantity
-            String message = "Alert: Some items in your inventory have reached zero!";
+            String message = "Alert: Some items in your inventory are at zero stock!";
             notificationHandler.sendNotification(message); // Use notification handler to send notification
         }
 
