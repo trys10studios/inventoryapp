@@ -10,45 +10,45 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder> {
-    private List<InventoryItem> inventoryList;
+public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
+    private List<InventoryItem> itemList;
 
-    // Constructor to initialize the inventory list
-    public InventoryAdapter(List<InventoryItem> inventoryItems) {
-        this.inventoryList = inventoryItems;
+    public InventoryAdapter(List<InventoryItem> itemList) {
+        this.itemList = itemList;
     }
 
-    // Inflate the layout for individual items in the RecyclerView
     @NonNull
     @Override
-    public InventoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_data_display, parent, false); // Ensure this layout exists
-        return new InventoryViewHolder(view);
+                .inflate(R.layout.item_data, parent, false);
+        return new ViewHolder(view);
     }
 
-    // Bind the data to the UI elements in the ViewHolder
     @Override
-    public void onBindViewHolder(@NonNull InventoryViewHolder holder, int position) {
-        InventoryItem currentItem = inventoryList.get(position);
-        holder.itemName.setText(currentItem.getItemName());
-        holder.itemQuantity.setText(String.valueOf(currentItem.getItemQuantity()));
-        holder.itemDescription.setText(currentItem.getItemDescription());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        InventoryItem item = itemList.get(position);
+        holder.itemName.setText(item.getItemName());
+        holder.itemID.setText(String.valueOf(item.getItemId()));
+        holder.itemQuantity.setText(String.valueOf(item.getItemQuantity()));
+        holder.itemDescription.setText(item.getItemDescription());
     }
 
-    // Return the total number of items
     @Override
     public int getItemCount() {
-        return inventoryList.size();
+        return itemList.size();
     }
 
-    // ViewHolder class for managing individual item views
-    public static class InventoryViewHolder extends RecyclerView.ViewHolder {
-        public TextView itemName, itemQuantity, itemDescription;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView itemName;
+        public TextView itemID;
+        public TextView itemQuantity;
+        public TextView itemDescription;
 
-        public InventoryViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.item_name); // Match the IDs in your XML layout
+            itemName = itemView.findViewById(R.id.item_name);
+            itemID = itemView.findViewById(R.id.id_number);
             itemQuantity = itemView.findViewById(R.id.quantity_count);
             itemDescription = itemView.findViewById(R.id.item_description);
         }

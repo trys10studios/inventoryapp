@@ -27,18 +27,18 @@ public class InventoryItem {
         quantity = newQuantity;
     }
 
+    public void setDescription(String newDescription){
+        description = newDescription;
+    }
+
     // Getters
     public String getItemName() {
         return itemName;
     }
-    public int getItemId(){
-        return id;
-    }
-
+    public int getItemId(){ return id; }
     public int getItemQuantity() {
         return quantity;
     }
-
     public String getItemDescription() {
         return description;
     }

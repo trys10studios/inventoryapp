@@ -13,18 +13,30 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-    <!--Item Text-->
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:gravity="start"
-        android:text="@string/item"
-        android:textAlignment="gravity"
-        android:textSize="25sp"
-        app:layout_constraintTop_toTopOf="parent" />
+        <!--Item Text-->
+        <TextView
+            android:id="@+id/item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/item"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Item Name Text -->
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/item"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
 
 </LinearLayout>
     <!-- Horizontal Layout for Item and Quantity Information -->
@@ -33,6 +45,30 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
+        <!--ID Text-->
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:text="@string/id"
+            android:textAlignment="gravity"
+            android:textSize="25sp" />
+
+        <!--ID Number-->
+        <TextView
+            android:id="@+id/id_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:text="@string/quantity_count"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="gravity"
+            android:textSize="25sp" />
 
         <!--Quantity Text-->
         <TextView
@@ -45,7 +81,7 @@
             android:textAlignment="gravity"
             android:textSize="25sp" />
 
-        <!--Quantity Count-->
+        <!--Quantity Count Number-->
         <TextView
             android:id="@+id/quantity_count"
             android:layout_width="wrap_content"

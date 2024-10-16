@@ -39,6 +39,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", newItem.getItemName());
+        values.put("id", newItem.getItemId());
         values.put("quantity", newItem.getItemQuantity());
         values.put("description", newItem.getItemDescription());
 
@@ -79,6 +80,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", updatedItem.getItemName());
+        values.put("id", updatedItem.getItemId());
         values.put("quantity", updatedItem.getItemQuantity());
         values.put("description", updatedItem.getItemDescription());
 
