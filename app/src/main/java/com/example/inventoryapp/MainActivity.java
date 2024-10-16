@@ -3,7 +3,6 @@ package com.example.inventoryapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -38,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.enterPassword);
         Button loginButton = findViewById(R.id.loginButton);
         Button signUpButton = findViewById(R.id.createAccount);
-        Button requestPermissionButton = findViewById(R.id.requestPermissionButton);
-        TextView notificationStatus = findViewById(R.id.notificationStatus);
 
         // Initialize the database and session manager
         userDatabase = new UserDatabase(this);

@@ -2,10 +2,13 @@ package com.example.inventoryapp;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -104,6 +107,8 @@ public class InventoryActivity extends AppCompatActivity implements SmsSender {
     private void checkSmsPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
+        } else {
+            retrievePhoneNumber(); // Call the method to retrieve phone number
         }
     }
 
@@ -123,5 +128,28 @@ public class InventoryActivity extends AppCompatActivity implements SmsSender {
     private String getPhoneNumber() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return sharedPreferences.getString("phoneNumber", null); // Assuming "phoneNumber" is the key
+    }
+    private void savePhoneNumber(String phoneNumber) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("phoneNumber", phoneNumber); // Save the phone number with this key
+        editor.apply();
+    }
+    private void retrievePhoneNumber() {
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            String phoneNumber = telephonyManager.getLine1Number();
+            Log.d("InventoryActivity", "Retrieved phone number: " + phoneNumber);
+            if (phoneNumber != null && !phoneNumber.isEmpty()) {
+                savePhoneNumber(phoneNumber); // Save the phone number for later use
+                Toast.makeText(this, "Phone number retrieved: " + phoneNumber, Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("InventoryActivity", "Phone number is null or empty");
+                Toast.makeText(this, "Unable to retrieve phone number", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.d("InventoryActivity", "Permission to read phone state is denied");
+            Toast.makeText(this, "Permission to read phone state is required", Toast.LENGTH_SHORT).show();
+        }
     }
 }
