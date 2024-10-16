@@ -38,7 +38,7 @@
         android:text="@string/quantity"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id"/>
+        app:layout_constraintTop_toBottomOf="@id/item_name" />
 
     <!-- Quantity Count EditText -->
     <EditText
@@ -50,8 +50,9 @@
         android:textSize="25sp"
         android:inputType="text"
         app:layout_constraintStart_toEndOf="@id/quantity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id"/>
+        app:layout_constraintTop_toTopOf="@id/quantity"
+        app:layout_constraintBottom_toBottomOf="@id/quantity"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Item Description TextView -->
     <TextView
