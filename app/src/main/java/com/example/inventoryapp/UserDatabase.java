@@ -5,15 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
-// UserDatabase.java
 public class UserDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "users.db";
     private static final int VERSION = 1;
+    private Context context; // Add context variable
 
     public UserDatabase(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
+        this.context = context; // Initialize context
     }
 
     @Override
@@ -45,13 +47,21 @@ public class UserDatabase extends SQLiteOpenHelper {
         return result != -1; // Returns true if the user was successfully added
     }
 
-    // Method to check if the user exists
+    // Method to check if the user exists and perform login
     public boolean checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?", new String[]{username, password});
         boolean exists = cursor.getCount() > 0;
         cursor.close();
-        return exists;
+
+        if (exists) {
+            Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show();
+            // You can add navigation logic here if needed
+        } else {
+            Toast.makeText(context, "Username and/or password not valid", Toast.LENGTH_SHORT).show();
+        }
+
+        return exists; // Return whether the user exists or not
     }
 
     // Method to check if a user exists by username
