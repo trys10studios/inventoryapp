@@ -34,6 +34,8 @@ public class InventoryActivity extends AppCompatActivity implements Notification
     private List<InventoryItem> itemList;
     private SessionManager sessionManager; // Add this to manage session
     private static final String CHANNEL_ID = "inventory_notifications";
+    private static final int REQUEST_CODE_PHONE_STATE = 1;
+    private static final int REQUEST_CODE_SMS = 2; // Add this constant for SMS permission
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         inventoryDatabase = new InventoryDatabase(this);
         sessionManager = new SessionManager(this);
 
-        checkSmsPermission(); // Check SMS permission
+        checkPhoneStatePermission();
 
         // Initialize the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -58,7 +60,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
 
         // Fetch inventory items from the database
         itemList = inventoryDatabase.getAllInventoryItems(); // Store it in the member variable
-        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase, this, this);
+        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase, this);
         recyclerView.setAdapter(inventoryAdapter);
 
         // Handle the Add Button click
@@ -69,9 +71,44 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         Button logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(v -> logoutUser());
 
+        checkNotificationPermission();
+        checkSmsPermission();
+
         // For top of screen notifications
         createNotificationChannel();
 
+        // Check if a phone number is already saved
+        String savedPhoneNumber = getPhoneNumber();
+        if (savedPhoneNumber == null) {
+            // Try to automatically retrieve the phone number
+            retrievePhoneNumber();
+        } else {
+            // Phone number exists, you can proceed
+            Toast.makeText(this, "Phone number found: " + savedPhoneNumber, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void promptForPhoneNumber() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Phone Number");
+
+        // Input field for phone number
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String phoneNumber = input.getText().toString().trim(); // Trim spaces
+            if (!phoneNumber.isEmpty()) {
+                savePhoneNumber(phoneNumber);  // Save phone number in SharedPreferences
+                Toast.makeText(this, "Phone number saved!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Please enter a valid phone number!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
     }
 
     private void logoutUser() {
@@ -111,6 +148,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
                 // Refresh the list in the RecyclerView
                 itemList.add(newItem);
                 inventoryAdapter.notifyItemInserted(itemList.size() - 1);
+
             } catch (NumberFormatException e) {
                 Toast.makeText(InventoryActivity.this, "Please enter valid numeric values for ID and Quantity.", Toast.LENGTH_SHORT).show();
             }
@@ -122,17 +160,15 @@ public class InventoryActivity extends AppCompatActivity implements Notification
 
     private void checkSmsPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
-        } else {
-            retrievePhoneNumber(); // Call the method to retrieve phone number
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, REQUEST_CODE_SMS);
         }
     }
 
     @Override
     public void sendSms(String message) {
         // Implement the SMS sending logic here
-        String phoneNumber = getPhoneNumber(); // Implement this method to retrieve the phone number
-        if (phoneNumber != null) {
+        String phoneNumber = getPhoneNumber(); // Retrieve the phone number from SharedPreferences
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
             SmsManager smsManager = SmsManager.getDefault();
             PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT"), PendingIntent.FLAG_IMMUTABLE);
             smsManager.sendTextMessage(phoneNumber, null, message, sentIntent, null);
@@ -144,31 +180,38 @@ public class InventoryActivity extends AppCompatActivity implements Notification
 
     private String getPhoneNumber() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        return sharedPreferences.getString("phoneNumber", null); // Assuming "phoneNumber" is the key
+        return sharedPreferences.getString("phoneNumber", null); // Retrieve the phone number
     }
+
     private void savePhoneNumber(String phoneNumber) {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("phoneNumber", phoneNumber); // Save the phone number with this key
         editor.apply();
     }
+
     private void retrievePhoneNumber() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        // Check permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            String phoneNumber = telephonyManager.getLine1Number();
-            Log.d("InventoryActivity", "Retrieved phone number: " + phoneNumber);
+            String phoneNumber = telephonyManager.getLine1Number();  // Try to retrieve the phone number
+
+            Log.d("InventoryActivity", "Retrieved phone number: " + phoneNumber); // Add this line
+
             if (phoneNumber != null && !phoneNumber.isEmpty()) {
-                savePhoneNumber(phoneNumber); // Save the phone number for later use
+                savePhoneNumber(phoneNumber);  // Save phone number if available
                 Toast.makeText(this, "Phone number retrieved: " + phoneNumber, Toast.LENGTH_SHORT).show();
             } else {
-                Log.d("InventoryActivity", "Phone number is null or empty");
-                Toast.makeText(this, "Unable to retrieve phone number", Toast.LENGTH_SHORT).show();
+                // Phone number not available, fall back to manual input
+                promptForPhoneNumber();
             }
         } else {
-            Log.d("InventoryActivity", "Permission to read phone state is denied");
-            Toast.makeText(this, "Permission to read phone state is required", Toast.LENGTH_SHORT).show();
+            // Request permission if not granted
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_CODE_PHONE_STATE);
         }
     }
+
     private void createNotificationChannel() {
         CharSequence name = "Inventory Notifications";
         String description = "Channel for inventory notifications";
@@ -178,26 +221,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
-    @Override
-    public void sendNotification(String message) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification) // Ensure the icon exists in the res/drawable directory
-                .setContentTitle("Inventory Alert")
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true); // Automatically remove the notification when clicked
 
-        // Intent for opening the app when the notification is clicked
-        Intent intent = new Intent(this, InventoryActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        builder.setContentIntent(pendingIntent);
-
-        // Get the NotificationManager service
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Send the notification
-        notificationManager.notify(1, builder.build()); // Notification ID can be any unique number
-    }
     private void checkNotificationPermission() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null && !notificationManager.areNotificationsEnabled()) {
@@ -216,13 +240,39 @@ public class InventoryActivity extends AppCompatActivity implements Notification
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == REQUEST_CODE_PHONE_STATE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, check for notifications
-                checkNotificationPermission();
+                // Permission granted, try retrieving phone number again
+                retrievePhoneNumber();
             } else {
-                Toast.makeText(this, "SMS permission is required!", Toast.LENGTH_SHORT).show();
+                // Permission denied, fall back to manual input
+                Toast.makeText(this, "Permission denied. Please enter your phone number manually.", Toast.LENGTH_SHORT).show();
+                promptForPhoneNumber();
             }
         }
+    }
+
+    private void checkPhoneStatePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_CODE_PHONE_STATE);
+        } else {
+            // Permission granted
+            retrievePhoneNumber();
+        }
+    }
+    public void sendNotification(String itemName) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "inventory_notifications"; // Ensure this matches your channel ID
+
+        // Create the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_notification) // Replace with your notification icon
+                .setContentTitle("Inventory Alert")
+                .setContentText(itemName + " is at zero stock!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true); // Dismiss the notification when tapped
+
+        // Show the notification
+        notificationManager.notify(1, builder.build()); // You can use a unique ID for each notification
     }
 }

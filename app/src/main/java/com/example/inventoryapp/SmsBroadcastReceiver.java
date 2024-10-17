@@ -1,5 +1,6 @@
 package com.example.inventoryapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             case SmsManager.RESULT_ERROR_RADIO_OFF:
                 Toast.makeText(context, "Radio off", Toast.LENGTH_SHORT).show();
                 break;
-            case -1:
+            case Activity.RESULT_OK:
                 Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
                 break;
         }

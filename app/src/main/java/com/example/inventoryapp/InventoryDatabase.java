@@ -14,7 +14,6 @@ public class InventoryDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "inventory.db";
     private static final int VERSION = 1;
-    private NotificationHandler notificationHandler;
 
     // Constructor
     public InventoryDatabase(Context context) {
@@ -98,7 +97,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             // If there's at least one item with zero quantity
             String message = "Alert: Some items in your inventory are at zero stock!";
-            notificationHandler.sendNotification(message); // Use notification handler to send notification
+            notificationHandler.sendSms(message); // Use notification handler to send notification
         }
 
         cursor.close();
