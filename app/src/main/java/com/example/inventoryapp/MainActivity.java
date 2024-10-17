@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView; // Import TextView
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SEND_SMS = 101;
     private EditText usernameInput, passwordInput;
+    private TextView errorTextView; // Declare TextView for error messages
     private UserDatabase userDatabase;
     private SessionManager sessionManager;
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the UI elements
         usernameInput = findViewById(R.id.enterUserName);
         passwordInput = findViewById(R.id.enterPassword);
+        errorTextView = findViewById(R.id.errorTextView); // Initialize the TextView
         Button loginButton = findViewById(R.id.loginButton);
         Button signUpButton = findViewById(R.id.createAccount);
 
@@ -49,14 +52,20 @@ public class MainActivity extends AppCompatActivity {
             String username = usernameInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            if (userDatabase.checkUser(username, password)) {
-                Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                sessionManager.createLoginSession(username);
-                Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
-                startActivity(intent);
-                finish();
+            // Clear previous error message
+            errorTextView.setVisibility(TextView.GONE);
+
+            if (isInputValid(username, password)) {
+                if (userDatabase.checkUser(username, password)) {
+                    Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    sessionManager.createLoginSession(username);
+                    sendSms("User logged in: " + username); // Send SMS notification
+                    Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             } else {
-                Toast.makeText(MainActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                showError("Username and or password not found.");
             }
         });
 
@@ -65,14 +74,20 @@ public class MainActivity extends AppCompatActivity {
             String username = usernameInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            if (userDatabase.addUser(username, password)) {
-                Toast.makeText(MainActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-                sessionManager.createLoginSession(username);
-                Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
-                startActivity(intent);
-                finish();
+            // Clear previous error message
+            errorTextView.setVisibility(TextView.GONE);
+
+            if (isInputValid(username, password)) {
+                if (userDatabase.addUser(username, password)) {
+                    Toast.makeText(MainActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+                    sessionManager.createLoginSession(username);
+                    sendSms("New user signed up: " + username); // Send SMS notification
+                    Intent intent = new Intent(MainActivity.this, InventoryActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             } else {
-                Toast.makeText(MainActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+                showError("Enter a Username and Password minimum 3 characters each");
             }
         });
     }
@@ -106,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_SEND_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission granted! You can now send SMS.", Toast.LENGTH_SHORT).show();
-                // No need to get the phone number after permission is granted
             } else {
                 Toast.makeText(this, "Permission denied! SMS functionality will be disabled.", Toast.LENGTH_SHORT).show();
             }
@@ -133,8 +147,15 @@ public class MainActivity extends AppCompatActivity {
 
             // Register a BroadcastReceiver to listen for the SMS sent status
             registerReceiver(new SmsBroadcastReceiver(), new IntentFilter("SMS_SENT"));
-        } else {
-            Toast.makeText(this, "Phone number not available!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isInputValid(String username, String password) {
+        return username.length() >= 3 && password.length() >= 3; // Ensure both username and password have at least 3 characters
+    }
+
+    private void showError(String message) {
+        errorTextView.setText(message);  // Set the error message
+        errorTextView.setVisibility(TextView.VISIBLE); // Make the TextView visible
     }
 }

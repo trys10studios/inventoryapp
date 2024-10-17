@@ -32,6 +32,11 @@ public class UserDatabase extends SQLiteOpenHelper {
 
     // Method to add a new user
     public boolean addUser(String username, String password) {
+        // Check if the user already exists
+        if (isUserExists(username)) {
+            return false; // User already exists, return false
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("username", username);
@@ -43,22 +48,18 @@ public class UserDatabase extends SQLiteOpenHelper {
     // Method to check if the user exists
     public boolean checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?", new String[] {username, password});
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ? AND password = ?", new String[]{username, password});
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
     }
 
+    // Method to check if a user exists by username
     public boolean isUserExists(String username) {
-        return false;
-    }
-
-    public void insertUser(String username, String password) {
-        // Add user to user database
-    }
-
-    public boolean validateUser(String username, String password) {
-        return false;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE username = ?", new String[]{username});
+        boolean exists = cursor.getCount() > 0; // Returns true if there is at least one user with the provided username
+        cursor.close();
+        return exists; // Return whether the user exists or not
     }
 }
-

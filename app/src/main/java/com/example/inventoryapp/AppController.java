@@ -27,14 +27,14 @@ public class AppController {
             return false; // User already exists
         } else {
             // Insert new user into the database
-            userDatabase.insertUser(username, password);
+            userDatabase.addUser(username, password);
             return true; // User created successfully
         }
     }
 
     // Method to log in a user
     public boolean login(String username, String password) {
-        return userDatabase.validateUser(username, password); // Validate user credentials
+        return userDatabase.checkUser(username, password); // Validate user credentials
     }
 
     /* Inventory Management */
