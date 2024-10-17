@@ -56,7 +56,7 @@ public class UserDatabase extends SQLiteOpenHelper {
 
         if (exists) {
             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show();
-            // You can add navigation logic here if needed
+
         } else {
             Toast.makeText(context, "Username and/or password not valid", Toast.LENGTH_SHORT).show();
         }
