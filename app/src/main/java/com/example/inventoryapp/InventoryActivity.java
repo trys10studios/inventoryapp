@@ -82,9 +82,6 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         if (savedPhoneNumber == null) {
             // Try to automatically retrieve the phone number
             retrievePhoneNumber();
-        } else {
-            // Phone number exists, you can proceed
-            Toast.makeText(this, "Phone number found: " + savedPhoneNumber, Toast.LENGTH_SHORT).show();
         }
     }
 
