@@ -259,17 +259,17 @@ public class InventoryActivity extends AppCompatActivity implements Notification
     }
     public void sendNotification(String itemName) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String channelId = "inventory_notifications"; // Ensure this matches your channel ID
+        String channelId = "inventory_notifications"; // Ensure this matches channel ID
 
         // Create the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_notification) // Replace with your notification icon
+                .setSmallIcon(R.drawable.ic_notification) // Notification Icon
                 .setContentTitle("Inventory Alert")
                 .setContentText(itemName + " is at zero stock!")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true); // Dismiss the notification when tapped
 
         // Show the notification
-        notificationManager.notify(1, builder.build()); // You can use a unique ID for each notification
+        notificationManager.notify(1, builder.build()); // Unique ID for each notification
     }
 }
