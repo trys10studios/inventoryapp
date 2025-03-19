@@ -101,9 +101,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             itemID = itemView.findViewById(R.id.id_number);
             itemQuantity = itemView.findViewById(R.id.quantity_count);
             itemDescription = itemView.findViewById(R.id.item_description);
-            increaseButton = itemView.findViewById(R.id.increaseButton);
-            decreaseButton = itemView.findViewById(R.id.decreaseButton);
-            deleteButton = itemView.findViewById(R.id.deleteButton);
+            increaseButton = itemView.findViewById(R.id.increase_button);
+            decreaseButton = itemView.findViewById(R.id.decrease_button);
+            deleteButton = itemView.findViewById(R.id.delete_button);
         }
     }
 
