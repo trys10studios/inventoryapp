@@ -2,6 +2,7 @@ package com.trys10studios.inventoryapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -41,7 +44,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         holder.itemName.setText(currentItem.getItemName());
         holder.itemQuantity.setText(String.valueOf(currentItem.getItemQuantity()));
-        holder.itemDescription.setText(currentItem.getItemDescription());
+        holder.itemDescription.setText(shortenText(currentItem.getItemDescription()));
         holder.itemID.setText(String.valueOf(currentItem.getItemId()));
 
         // Increase button functionality
@@ -130,13 +133,12 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         builder.create().show();
     }
 
-
     @Override
     public int getItemCount() {
         return itemList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView itemName, itemQuantity, itemDescription, itemID;
         public ImageButton increaseButton, decreaseButton, deleteButton;
         public Button fullViewButton, editButton;
@@ -160,4 +162,15 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         return sharedPreferences.getString("default_phone_number", null); // Returns null if not found
     }
+    private String shortenText(String string) {
+        // Limit Description to 50 chars
+        int maxLength = 50;
+
+        if (string.length() > maxLength) {
+            string = string.substring(0, maxLength);  // Shorten the text
+        }
+
+        return string;  // Return the TextView for chaining or further use
+    }
+
 }
