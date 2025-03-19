@@ -55,7 +55,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         checkPhoneStatePermission();
 
         // Initialize the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Fetch inventory items from the database

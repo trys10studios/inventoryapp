@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -84,7 +87,49 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             // Notify that the item is removed
             notifyItemRemoved(position);
         });
+
+        // Edit Button functionality
+        holder.editButton.setOnClickListener(v -> showEditDialog(currentItem, position));
     }
+
+    private void showEditDialog(InventoryItem item, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Edit Item");
+
+        // Inflate custom dialog layout
+        View view = LayoutInflater.from(context).inflate(R.layout.add_item, null);
+        builder.setView(view);
+
+        // Get references to input fields
+        EditText nameInput = view.findViewById(R.id.item_name_input);
+        EditText descriptionInput = view.findViewById(R.id.item_description_input);
+
+        // Populate fields with current item data
+        nameInput.setText(item.getItemName());
+        descriptionInput.setText(item.getItemDescription());
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            // Get updated values
+            String newName = nameInput.getText().toString();
+            String newDescription = descriptionInput.getText().toString();
+
+            // Update item
+            item.setItemName(newName);
+            item.setDescription(newDescription);
+
+            // Update database
+            inventoryDatabase.updateInventoryItem(item);
+
+            // Notify adapter that item has changed
+            notifyItemChanged(position);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // Show the dialog
+        builder.create().show();
+    }
+
 
     @Override
     public int getItemCount() {
@@ -94,6 +139,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView itemName, itemQuantity, itemDescription, itemID;
         public ImageButton increaseButton, decreaseButton, deleteButton;
+        public Button fullViewButton, editButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -104,6 +150,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             increaseButton = itemView.findViewById(R.id.increase_button);
             decreaseButton = itemView.findViewById(R.id.decrease_button);
             deleteButton = itemView.findViewById(R.id.delete_button);
+            fullViewButton = itemView.findViewById(R.id.full_view_button);
+            editButton = itemView.findViewById(R.id.edit_button);
         }
     }
 

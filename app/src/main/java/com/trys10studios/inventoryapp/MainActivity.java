@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize the UI elements
-        usernameInput = findViewById(R.id.enterUserName);
-        passwordInput = findViewById(R.id.enterPassword);
-        errorTextView = findViewById(R.id.errorTextView); // Initialize the TextView
-        Button loginButton = findViewById(R.id.loginButton);
-        Button signUpButton = findViewById(R.id.createAccount);
+        usernameInput = findViewById(R.id.enter_user_name);
+        passwordInput = findViewById(R.id.enter_password);
+        errorTextView = findViewById(R.id.error_text_view); // Initialize the TextView
+        Button loginButton = findViewById(R.id.login_button);
+        Button signUpButton = findViewById(R.id.create_account);
 
         // Initialize the database and session manager
         userDatabase = new UserDatabase(this);

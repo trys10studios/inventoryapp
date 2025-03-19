@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="fullViewButton" type="id" />
     <item name="id" type="id"/>
     <item name="quantity" type="id"/>
     <item name="quantity_count" type="id"/>
