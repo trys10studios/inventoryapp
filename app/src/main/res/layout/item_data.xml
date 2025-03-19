@@ -95,7 +95,7 @@
 
         <!--Increase Quantity Button-->
         <ImageButton
-            android:id="@+id/increaseButton"
+            android:id="@+id/increase_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="50dp"
@@ -111,7 +111,7 @@
 
         <!--Decrease Quantity Button-->
         <ImageButton
-            android:id="@+id/decreaseButton"
+            android:id="@+id/decrease_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="50dp"
@@ -132,7 +132,7 @@
 
             <!--Delete Button-->
             <ImageButton
-                android:id="@+id/deleteButton"
+                android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="50dp"
@@ -162,7 +162,7 @@
         android:textSize="25sp"
         app:layout_constraintTop_toTopOf="parent" />
     <Button
-        android:id="@id/fullviewButton"
+        android:id="@id/full_view_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="200dp"
@@ -170,8 +170,26 @@
         android:minHeight="50dp"
         android:maxHeight="60dp"
         android:text="Full View"
+        android:textSize="25sp"
         android:layout_margin="10dp"
-        android:contentDescription="@string/fullview_button"
+        android:contentDescription="@string/full_view"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <Button
+        android:id="@id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:maxWidth="60dp"
+        android:minHeight="50dp"
+        android:maxHeight="60dp"
+        android:text="Full View"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/edit"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         app:layout_constraintTop_toTopOf="parent"

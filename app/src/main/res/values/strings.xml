@@ -21,5 +21,6 @@
     <string name="id">ID: </string>
     <string name="remove_item">Remove Item</string>
     <string name="description_placeholder">Description Placeholder</string>
-    <string name="fullview_button">Full View Button</string>
+    <string name="full_view">Full View</string>
+    <string name="edit" >Edit</string>
 </resources>
