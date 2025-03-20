@@ -1,6 +1,5 @@
 package com.trys10studios.inventoryapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -97,7 +96,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     }
 
     private void showFullScreenDialog(InventoryItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(((Activity)context), android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.full_view, null);
 
@@ -106,6 +105,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         TextView id = view.findViewById(R.id.full_id_number);
         TextView quantity = view.findViewById(R.id.full_quantity);
         TextView description = view.findViewById(R.id.full_description);
+        Button closeButton = view.findViewById(R.id.close_button);
 
         // Set data
         itemName.setText(item.getItemName());
@@ -121,6 +121,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
         dialog.show();
+        // Set the close button's action
+        closeButton.setOnClickListener(v -> {
+            // Dismiss the dialog when the close button is clicked
+            dialog.dismiss();
+        });
     }
 
 
