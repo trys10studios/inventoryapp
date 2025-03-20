@@ -1,5 +1,7 @@
 package com.trys10studios.inventoryapp;
 
+import static android.provider.Settings.System.getString;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -108,10 +110,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         Button closeButton = view.findViewById(R.id.close_button);
 
         // Set data
-        itemName.setText(item.getItemName());
-        id.setText(String.valueOf(item.getItemId()));
-        quantity.setText(String.valueOf(item.getItemQuantity()));
-        description.setText(item.getItemDescription());
+        itemName.setText(context.getString(R.string.item) + " " + item.getItemName());
+        id.setText(context.getString(R.string.id) + " " + String.valueOf(item.getItemId()));
+        quantity.setText(context.getString(R.string.quantity) + " " + String.valueOf(item.getItemQuantity()));
+        description.setText(context.getString(R.string.description) + " " + item.getItemDescription());
 
         builder.setView(view);
         AlertDialog dialog = builder.create();
