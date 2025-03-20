@@ -1,5 +1,6 @@
 package com.trys10studios.inventoryapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,7 +93,36 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         // Edit Button functionality
         holder.editButton.setOnClickListener(v -> showEditDialog(currentItem, position));
+        holder.fullViewButton.setOnClickListener(v -> showFullScreenDialog(currentItem));
     }
+
+    private void showFullScreenDialog(InventoryItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(((Activity)context), android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.full_view, null);
+
+        // Initialize UI elements
+        TextView itemName = view.findViewById(R.id.full_item_name);
+        TextView id = view.findViewById(R.id.full_id_number);
+        TextView quantity = view.findViewById(R.id.full_quantity);
+        TextView description = view.findViewById(R.id.full_description);
+
+        // Set data
+        itemName.setText(item.getItemName());
+        id.setText(String.valueOf(item.getItemId()));
+        quantity.setText(String.valueOf(item.getItemQuantity()));
+        description.setText(item.getItemDescription());
+
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+
+        // Set dialog to full screen
+        if(dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
+        dialog.show();
+    }
+
 
     private void showEditDialog(InventoryItem item, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -102,6 +134,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         // Get references to input fields
         EditText nameInput = view.findViewById(R.id.item_name_input);
+        EditText quantity = view.findViewById(R.id.quantity_count);
         EditText descriptionInput = view.findViewById(R.id.item_description_input);
 
         // Populate fields with current item data
@@ -111,10 +144,28 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         builder.setPositiveButton("Save", (dialog, which) -> {
             // Get updated values
             String newName = nameInput.getText().toString();
+            String newQuantity = quantity.getText().toString();
             String newDescription = descriptionInput.getText().toString();
+
+            // Validate quantity
+            if (newQuantity.isEmpty()) {
+                // Show Toast if quantity is empty
+                Toast.makeText(context, "Quantity cannot be empty", Toast.LENGTH_SHORT).show();
+                return;  // Exit if quantity is empty
+            }
+
+            int parsedQuantity = 0;
+            try {
+                parsedQuantity = Integer.parseInt(newQuantity);  // Try to parse the quantity as an integer
+            } catch (NumberFormatException e) {
+                // Show Toast if it's not a valid number
+                Toast.makeText(context, "Please enter a valid quantity", Toast.LENGTH_SHORT).show();
+                return;  // Exit if invalid quantity
+            }
 
             // Update item
             item.setItemName(newName);
+            item.setQuantity(Integer.parseInt(newQuantity));
             item.setDescription(newDescription);
 
             // Update database
@@ -160,8 +211,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         return sharedPreferences.getString("default_phone_number", null); // Returns null if not found
     }
     private String shortenText(String string) {
-        // Limit Description to 50 chars
-        int maxLength = 50;
+        // Limit Description to 25 chars
+        int maxLength = 25;
 
         if (string.length() > maxLength) {
             string = string.substring(0, maxLength);  // Shorten the text

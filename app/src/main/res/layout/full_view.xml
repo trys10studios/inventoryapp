@@ -7,7 +7,7 @@
     android:layout_margin="10dp">
 
     <TextView
-        android:id="@+id/item_name"
+        android:id="@+id/full_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/item"
@@ -16,23 +16,23 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
     <TextView
-        android:id="@+id/id_number"
+        android:id="@+id/full_id_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/id"
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_name"/>
+        app:layout_constraintTop_toBottomOf="@id/full_item_name"/>
     <TextView
-        android:id="@+id/quantity"
+        android:id="@+id/full_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/quantity_count"
+        android:text="@string/quantity"
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id_number"/>
+        app:layout_constraintTop_toBottomOf="@id/full_id_number"/>
     <TextView
         android:id="@+id/full_description"
         android:layout_width="match_parent"
@@ -42,6 +42,18 @@
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quantity"/>
+        app:layout_constraintTop_toBottomOf="@id/full_quantity"/>
+
+    <Button
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="480dp"
+        android:minWidth="200dp"
+        android:text="@string/close_button"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/full_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
