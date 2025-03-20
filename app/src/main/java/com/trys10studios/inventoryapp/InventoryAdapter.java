@@ -159,9 +159,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
                 return;  // Exit if quantity is empty
             }
 
-            int parsedQuantity = 0;
             try {
-                parsedQuantity = Integer.parseInt(newQuantity);  // Try to parse the quantity as an integer
+                Integer.parseInt(newQuantity);  // Try to parse the quantity as an integer
             } catch (NumberFormatException e) {
                 // Show Toast if it's not a valid number
                 Toast.makeText(context, "Please enter a valid quantity", Toast.LENGTH_SHORT).show();
