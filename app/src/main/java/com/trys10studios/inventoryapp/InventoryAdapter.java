@@ -1,9 +1,8 @@
 package com.trys10studios.inventoryapp;
 
-import static android.provider.Settings.System.getString;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
-    private final List<InventoryItem> itemList;
+    private List<InventoryItem> itemList;
     private final InventoryDatabase inventoryDatabase;
     private final Context context; // Store the context
     private static final String CHANNEL_ID = "inventory_notifications";
+    private Cursor cursor;
 
     public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase, Context context) {
         this.itemList = itemList;
@@ -47,6 +47,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         holder.itemQuantity.setText(String.valueOf(currentItem.getItemQuantity()));
         holder.itemDescription.setText(shortenText(currentItem.getItemDescription()));
         holder.itemID.setText(String.valueOf(currentItem.getItemId()));
+
+        holder.itemName.setText(cursor.getString(cursor.getColumnIndexOrThrow("name")));
 
         // Increase button functionality
         holder.increaseButton.setOnClickListener(v -> {
@@ -226,5 +228,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         return string;  // Return the TextView for chaining or further use
     }
-
+    public void updateInventoryList(List<InventoryItem> updatedList) {
+        this.itemList = updatedList;  // Update the list with the search results
+        notifyDataSetChanged();  // Notify the adapter to update the UI
+    }
 }

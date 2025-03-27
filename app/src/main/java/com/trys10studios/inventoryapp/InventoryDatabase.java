@@ -102,4 +102,28 @@ public class InventoryDatabase extends SQLiteOpenHelper {
 
         cursor.close();
     }
+    public List<InventoryItem> searchInventoryItems(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<InventoryItem> resultList = new ArrayList<>();
+
+        // Simple query to search in name or description
+        String selection = "name LIKE ? OR description LIKE ?";
+        String[] selectionArgs = new String[]{"%" + query + "%", "%" + query + "%"};
+
+        Cursor cursor = db.query(DATABASE_NAME, null, selection, selectionArgs, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+                // Add matching item to result list
+                resultList.add(new InventoryItem(name, 0, quantity, description)); // Assuming you have constructor
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        db.close();
+        return resultList;
+    }
+
 }

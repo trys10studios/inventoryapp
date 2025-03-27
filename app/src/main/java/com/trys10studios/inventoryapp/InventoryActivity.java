@@ -62,6 +62,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         itemList = inventoryDatabase.getAllInventoryItems(); // Store it in the member variable
         inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase, this);
         recyclerView.setAdapter(inventoryAdapter);
+        filteredItemList = new ArrayList<>(itemList);  // Initialize the filtered list
 
         // Handle the Add Button click
         Button addButton = findViewById(R.id.add_button);
@@ -112,7 +113,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         sessionManager.logoutUser();
         Intent intent = new Intent(this, MainActivity.class); // Redirect to MainActivity after logging out
         startActivity(intent);
-        finish(); // Finish the current activity
+        finish(); // Finish the current activity, built-in Android method for closing the activity
     }
 
     private void showAddItemDialog() {
