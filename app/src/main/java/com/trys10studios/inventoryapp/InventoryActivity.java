@@ -21,11 +21,13 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryActivity extends AppCompatActivity implements NotificationHandler {
@@ -36,6 +38,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
     private static final String CHANNEL_ID = "inventory_notifications";
     private static final int REQUEST_CODE_PHONE_STATE = 1;
     private static final int REQUEST_CODE_SMS = 2; // Add this constant for SMS permission
+    private List<InventoryItem> filteredItemList;  // Add a filtered list for search results
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,43 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             // Try to automatically retrieve the phone number
             retrievePhoneNumber();
         }
+
+        // Set up search functionality
+        SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Optional: You can handle query submission here if needed
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter the inventory items based on the search query
+                filterItems(newText);
+                return true;
+            }
+        });
+
+    }
+
+    // This method filters the items based on the query text
+    private void filterItems(String query) {
+        // Clear the filtered list and add the matching items
+        filteredItemList.clear();
+        if (query.isEmpty()) {
+            filteredItemList.addAll(itemList);  // If the query is empty, show all items
+        } else {
+            for (InventoryItem item : itemList) {
+                if (item.getItemName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredItemList.add(item);  // Add the items that match the query
+                }
+            }
+        }
+        // Update the adapter's list and notify the RecyclerView
+        inventoryAdapter.updateItemList(filteredItemList);
+        // Notify the adapter that the dataset has changed
+        inventoryAdapter.notifyDataSetChanged();
     }
 
     private void promptForPhoneNumber() {
