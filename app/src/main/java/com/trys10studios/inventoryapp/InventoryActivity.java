@@ -171,6 +171,8 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             EditText itemNameInput = customLayout.findViewById(R.id.item_name_input);
             EditText itemQuantityInput = customLayout.findViewById(R.id.quantity_count);
             EditText itemDescriptionInput = customLayout.findViewById(R.id.item_description_input);
+            EditText itemCategoryInput = customLayout.findViewById(R.id.category_input);
+            EditText itemPrice = customLayout.findViewById(R.id.price_input);
 
             String name = itemNameInput.getText().toString();
             String quantityString = itemQuantityInput.getText().toString();

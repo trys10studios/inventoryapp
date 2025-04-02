@@ -28,4 +28,6 @@
     <string name="sku_num">0</string>
     <string name="price">Price: $</string>
     <string name="price_num">0</string>
+    <string name="category">Category: </string>
+    <string name="category_placeholder">Category Placeholder</string>
 </resources>

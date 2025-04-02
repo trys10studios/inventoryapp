@@ -30,10 +30,10 @@ public class InventoryItem {
     public void setQuantity(int newQuantity){
         quantity = newQuantity;
     }
+    public void setCategory(String newCategory) { category = newCategory; }
     public void setPrice(int newPrice){
         quantity = newPrice;
     }
-    public void setCategory(String newCategory) { category = newCategory; }
     public void setDescription(String newDescription){
         description = newDescription;
     }
@@ -46,8 +46,8 @@ public class InventoryItem {
     public int getItemQuantity() {
         return quantity;
     }
-    public int getItemPrice() {return price; }
     public String getItemCategory() { return category; }
+    public int getItemPrice() {return price; }
     public String getItemDescription() {
         return description;
     }

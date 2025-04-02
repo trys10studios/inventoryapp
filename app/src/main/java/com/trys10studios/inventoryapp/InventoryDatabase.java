@@ -40,6 +40,8 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("name", newItem.getItemName());
         values.put("quantity", newItem.getItemQuantity());
+        values.put("category", newItem.getItemCategory());
+        values.put("price", newItem.getItemPrice());
         values.put("description", newItem.getItemDescription());
 
         // Insert into the database and get the new row's id
