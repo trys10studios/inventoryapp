@@ -169,12 +169,14 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             // Get user input
             EditText itemNameInput = customLayout.findViewById(R.id.item_name_input);
             EditText itemQuantityInput = customLayout.findViewById(R.id.quantity_count);
+            EditText itemSKUInput = customLayout.findViewById(R.id.sku_num);
             EditText itemDescriptionInput = customLayout.findViewById(R.id.item_description_input);
             EditText itemCategoryInput = customLayout.findViewById(R.id.category_input);
             EditText itemPriceInput = customLayout.findViewById(R.id.price_input);
 
             String nameString = itemNameInput.getText().toString();
             String quantityString = itemQuantityInput.getText().toString();
+            String skuString = itemSKUInput.getText().toString();
             String descriptionString = itemDescriptionInput.getText().toString();
             String categoryString = itemCategoryInput.getText().toString();
             String priceString = itemPriceInput.getText().toString();
@@ -184,7 +186,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
                 int price = Integer.parseInt(priceString);
 
                 // Create new InventoryItem and insert it into the database
-                InventoryItem newItem = new InventoryItem(nameString, 0, quantity, categoryString, price, descriptionString); // id zero due to auto-increment
+                InventoryItem newItem = new InventoryItem(nameString, 0, quantity, skuString, categoryString, price, descriptionString); // id zero due to auto-increment
                 inventoryDatabase.insertInventoryItem(newItem);
 
                 // Refresh the list in the RecyclerView

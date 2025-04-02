@@ -24,7 +24,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create the "inventory" table
         db.execSQL("CREATE TABLE inventory (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT, quantity INTEGER, category TEXT, price INTEGER, description TEXT)");
+                "name TEXT, quantity INTEGER, sku TEXT, category TEXT, price INTEGER, description TEXT)");
     }
 
     @Override
@@ -39,6 +39,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", newItem.getItemName());
+        values.put("sku", newItem.getSku());
         values.put("quantity", newItem.getItemQuantity());
         values.put("category", newItem.getItemCategory());
         values.put("price", newItem.getItemPrice());
@@ -61,13 +62,14 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String sku = cursor.getString(cursor.getColumnIndexOrThrow("sku"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
                 String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
                 int price = cursor.getInt(cursor.getColumnIndexOrThrow("price"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
 
-                InventoryItem item = new InventoryItem(name, id, quantity, category, price, description);
+                InventoryItem item = new InventoryItem(name, id, quantity, sku, category, price, description);
                 itemList.add(item);
             } while (cursor.moveToNext());
         }
@@ -87,6 +89,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", updatedItem.getItemName());
+        values.put("sku", updatedItem.getSku());
         values.put("quantity", updatedItem.getItemQuantity());
         values.put("category", updatedItem.getItemCategory());
         values.put("price", updatedItem.getItemPrice());
@@ -121,13 +124,14 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String sku = cursor.getString(cursor.getColumnIndexOrThrow("sku"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
                 String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
                 int price = cursor.getInt(cursor.getColumnIndexOrThrow("price"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
 
                 // Add matching item to result list
-                resultList.add(new InventoryItem(name, 0, quantity, category, price, description)); // Assuming you have constructor
+                resultList.add(new InventoryItem(name, 0, quantity, sku, category, price, description)); // Assuming you have constructor
             } while (cursor.moveToNext());
             cursor.close();
         }

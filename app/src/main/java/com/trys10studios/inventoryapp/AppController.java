@@ -40,8 +40,8 @@ public class AppController {
     /* Inventory Management */
 
     // Method to add a new inventory item
-    public void addInventoryItem(String itemName, int quantity,String category, int price, String description) {
-        InventoryItem newItem = new InventoryItem(itemName, 0, quantity, category, price, description); // ID is 0 because it's auto-incremented
+    public void addInventoryItem(String itemName, int quantity, String sku, String category, int price, String description) {
+        InventoryItem newItem = new InventoryItem(itemName, 0, quantity, sku, category, price, description); // ID is 0 because it's auto-incremented
         inventoryDatabase.insertInventoryItem(newItem);
     }
 
@@ -56,8 +56,8 @@ public class AppController {
     }
 
     // Method to update an inventory item
-    public void updateInventoryItem(String itemName, int id, int quantity, String category, int price, String description) {
-        InventoryItem updatedItem = new InventoryItem(itemName, id, quantity, category, price, description);
+    public void updateInventoryItem(String itemName, int id, int quantity, String sku, String category, int price, String description) {
+        InventoryItem updatedItem = new InventoryItem(itemName, id, quantity, sku, category, price, description);
         updatedItem.setId(id);
         inventoryDatabase.updateInventoryItem(updatedItem);
     }

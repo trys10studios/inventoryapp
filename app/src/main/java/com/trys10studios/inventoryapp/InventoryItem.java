@@ -3,15 +3,17 @@ package com.trys10studios.inventoryapp;
 public class InventoryItem {
     private String itemName;
     private int id;
+    private String sku;
     private int quantity;
     private int price;
     private String category;
     private String description;
 
     // Constructor
-    public InventoryItem(String itemName, int id, int quantity, String category, int price, String description) {
+    public InventoryItem(String itemName, int id, int quantity, String sku, String category, int price, String description) {
         this.itemName = itemName;
         this.id = id;
+        this.sku = sku;
         this.quantity = quantity;
         this.category = category;
         this.price = price;
@@ -28,6 +30,7 @@ public class InventoryItem {
     public void setQuantity(int newQuantity){
         quantity = newQuantity;
     }
+    public void setSKU(String newSKU) { sku = newSKU; }
     public void setCategory(String newCategory) { category = newCategory; }
     public void setPrice(int newPrice){
         quantity = newPrice;
@@ -41,6 +44,7 @@ public class InventoryItem {
         return itemName;
     }
     public int getItemId(){ return id; }
+    public String getSku(){ return sku; }
     public int getItemQuantity() {
         return quantity;
     }

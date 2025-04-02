@@ -105,6 +105,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         // Initialize UI elements
         TextView itemName = view.findViewById(R.id.full_item_name);
         TextView id = view.findViewById(R.id.full_id_number);
+        TextView sku = view.findViewById(R.id.full_sku);
         TextView quantity = view.findViewById(R.id.full_quantity);
         TextView category = view.findViewById(R.id.full_category);
         TextView price = view.findViewById(R.id.full_price);
@@ -114,6 +115,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         // Set data
         itemName.setText(context.getString(R.string.item) + " " + item.getItemName());
         id.setText(context.getString(R.string.id) + " " + String.valueOf(item.getItemId()));
+        sku.setText(context.getString(R.string.sku) + " " + String.valueOf(item.getSku()));
         quantity.setText(context.getString(R.string.quantity) + " " + String.valueOf(item.getItemQuantity()));
         category.setText(context.getString(R.string.category) + " " + String.valueOf(item.getItemCategory()));
         price.setText(context.getString(R.string.price) + " " + String.valueOf(item.getItemPrice()));
@@ -145,7 +147,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         // Get references to input fields
         EditText nameInput = view.findViewById(R.id.item_name_input);
+        EditText sku = view.findViewById(R.id.sku_num);
         EditText quantity = view.findViewById(R.id.quantity_count);
+        EditText category = view.findViewById(R.id.category_input);
+        EditText price = view.findViewById(R.id.price_input);
         EditText descriptionInput = view.findViewById(R.id.item_description_input);
 
         // Populate fields with current item data
@@ -155,9 +160,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         builder.setPositiveButton("Save", (dialog, which) -> {
             // Get updated values
             String newName = nameInput.getText().toString();
+            String newSKU = sku.getText().toString();
             String newQuantity = quantity.getText().toString();
-            String newCategory = quantity.getText().toString();
-            String newPrice = quantity.getText().toString();
+            String newCategory = category.getText().toString();
+            String newPrice = price.getText().toString();
             String newDescription = descriptionInput.getText().toString();
 
             // Validate quantity
@@ -177,8 +183,11 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
             // Update item
             item.setItemName(newName);
+            item.setSKU(newSKU);
             item.setQuantity(Integer.parseInt(newQuantity));
             item.setDescription(newDescription);
+            item.setCategory(newCategory);
+            item.setPrice(Integer.parseInt(newPrice));
 
             // Update database
             inventoryDatabase.updateInventoryItem(item);
