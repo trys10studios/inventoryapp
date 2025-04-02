@@ -155,6 +155,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         // Populate fields with current item data
         nameInput.setText(item.getItemName());
+        sku.setText(String.valueOf(item.getSku()));
+        quantity.setText(String.valueOf(item.getItemQuantity()));
+        category.setText(item.getItemCategory());
+        price.setText(String.valueOf(item.getItemPrice()));
         descriptionInput.setText(item.getItemDescription());
 
         builder.setPositiveButton("Save", (dialog, which) -> {
