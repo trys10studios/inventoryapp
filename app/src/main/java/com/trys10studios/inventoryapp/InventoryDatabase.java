@@ -24,7 +24,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create the "inventory" table
         db.execSQL("CREATE TABLE inventory (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT, quantity INTEGER, description TEXT)");
+                "name TEXT, quantity INTEGER, category TEXT, price INTEGER, description TEXT)");
     }
 
     @Override
@@ -61,9 +61,11 @@ public class InventoryDatabase extends SQLiteOpenHelper {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
+                String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
+                int price = cursor.getInt(cursor.getColumnIndexOrThrow("price"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
 
-                InventoryItem item = new InventoryItem(name, id, quantity, description);
+                InventoryItem item = new InventoryItem(name, id, quantity, category, price, description);
                 itemList.add(item);
             } while (cursor.moveToNext());
         }
@@ -116,9 +118,12 @@ public class InventoryDatabase extends SQLiteOpenHelper {
             do {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
+                String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
+                int price = cursor.getInt(cursor.getColumnIndexOrThrow("price"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+
                 // Add matching item to result list
-                resultList.add(new InventoryItem(name, 0, quantity, description)); // Assuming you have constructor
+                resultList.add(new InventoryItem(name, 0, quantity, category, price, description)); // Assuming you have constructor
             } while (cursor.moveToNext());
             cursor.close();
         }

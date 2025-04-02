@@ -175,12 +175,15 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             String name = itemNameInput.getText().toString();
             String quantityString = itemQuantityInput.getText().toString();
             String description = itemDescriptionInput.getText().toString();
+            String category = itemDescriptionInput.getText().toString();
+            String priceString = itemDescriptionInput.getText().toString();
 
             try {
                 int quantity = Integer.parseInt(quantityString);
+                int price = Integer.parseInt(priceString);
 
                 // Create new InventoryItem and insert it into the database
-                InventoryItem newItem = new InventoryItem(name, 0, quantity, description); // id zero due to auto-increment
+                InventoryItem newItem = new InventoryItem(name, 0, quantity, category, price, description); // id zero due to auto-increment
                 inventoryDatabase.insertInventoryItem(newItem);
 
                 // Refresh the list in the RecyclerView

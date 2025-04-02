@@ -24,4 +24,8 @@
     <string name="full_view">Full View</string>
     <string name="edit_item" >Edit Item</string>
     <string name="close_button">Close</string>
+    <string name="sku">SKU: </string>
+    <string name="sku_num">0</string>
+    <string name="price">Price: $</string>
+    <string name="price_num">0</string>
 </resources>

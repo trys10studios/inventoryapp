@@ -37,8 +37,74 @@
             android:textAlignment="gravity"
             android:textSize="25sp"
             app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 
-</LinearLayout>
+    <!--Layout for individual sku numbers in Recycler View-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--Item Text-->
+        <TextView
+            android:id="@+id/sku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/sku"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Item Name Text -->
+        <TextView
+            android:id="@+id/sku_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/sku_num"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <!--Layout for individual Price in Recycler View-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--Item Text-->
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/price"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Item Name Text -->
+        <TextView
+            android:id="@+id/price_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/price_num"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
     <!-- Horizontal Layout for Item and Quantity Information -->
     <LinearLayout
         android:layout_width="match_parent"
