@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
@@ -104,6 +106,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         TextView itemName = view.findViewById(R.id.full_item_name);
         TextView id = view.findViewById(R.id.full_id_number);
         TextView quantity = view.findViewById(R.id.full_quantity);
+        TextView category = view.findViewById(R.id.full_category);
+        TextView price = view.findViewById(R.id.full_price);
         TextView description = view.findViewById(R.id.full_description);
         Button closeButton = view.findViewById(R.id.close_button);
 
@@ -111,6 +115,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         itemName.setText(context.getString(R.string.item) + " " + item.getItemName());
         id.setText(context.getString(R.string.id) + " " + String.valueOf(item.getItemId()));
         quantity.setText(context.getString(R.string.quantity) + " " + String.valueOf(item.getItemQuantity()));
+        category.setText(context.getString(R.string.category) + " " + String.valueOf(item.getItemCategory()));
+        price.setText(context.getString(R.string.price) + " " + String.valueOf(item.getItemPrice()));
         description.setText(context.getString(R.string.description) + " " + item.getItemDescription());
 
         builder.setView(view);
@@ -150,6 +156,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             // Get updated values
             String newName = nameInput.getText().toString();
             String newQuantity = quantity.getText().toString();
+            String newCategory = quantity.getText().toString();
+            String newPrice = quantity.getText().toString();
             String newDescription = descriptionInput.getText().toString();
 
             // Validate quantity
@@ -191,7 +199,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView itemName, itemQuantity, itemDescription, itemID;
+        public TextView itemName, itemQuantity, itemCategory, itemPrice, itemDescription, itemID;
         public ImageButton increaseButton, decreaseButton, deleteButton;
         public Button fullViewButton, editButton;
 
@@ -200,6 +208,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             itemName = itemView.findViewById(R.id.item_name);
             itemID = itemView.findViewById(R.id.id_number);
             itemQuantity = itemView.findViewById(R.id.quantity_count);
+            itemCategory = itemView.findViewById(R.id.category);
+            itemPrice = itemView.findViewById(R.id.price);
             itemDescription = itemView.findViewById(R.id.item_description);
             increaseButton = itemView.findViewById(R.id.increase_button);
             decreaseButton = itemView.findViewById(R.id.decrease_button);

@@ -22,11 +22,9 @@ public class InventoryItem {
     public void setItemName(String newItemName){
         itemName = newItemName;
     }
-
     public void setId(int newId) {
         id = newId;
     }
-
     public void setQuantity(int newQuantity){
         quantity = newQuantity;
     }

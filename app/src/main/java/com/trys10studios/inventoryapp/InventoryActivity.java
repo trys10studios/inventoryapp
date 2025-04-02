@@ -104,7 +104,6 @@ public class InventoryActivity extends AppCompatActivity implements Notification
                 return true;
             }
         });
-
     }
 
     // This method filters the items based on the query text
@@ -172,20 +171,20 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             EditText itemQuantityInput = customLayout.findViewById(R.id.quantity_count);
             EditText itemDescriptionInput = customLayout.findViewById(R.id.item_description_input);
             EditText itemCategoryInput = customLayout.findViewById(R.id.category_input);
-            EditText itemPrice = customLayout.findViewById(R.id.price_input);
+            EditText itemPriceInput = customLayout.findViewById(R.id.price_input);
 
-            String name = itemNameInput.getText().toString();
+            String nameString = itemNameInput.getText().toString();
             String quantityString = itemQuantityInput.getText().toString();
-            String description = itemDescriptionInput.getText().toString();
-            String category = itemDescriptionInput.getText().toString();
-            String priceString = itemDescriptionInput.getText().toString();
+            String descriptionString = itemDescriptionInput.getText().toString();
+            String categoryString = itemCategoryInput.getText().toString();
+            String priceString = itemPriceInput.getText().toString();
 
             try {
                 int quantity = Integer.parseInt(quantityString);
                 int price = Integer.parseInt(priceString);
 
                 // Create new InventoryItem and insert it into the database
-                InventoryItem newItem = new InventoryItem(name, 0, quantity, category, price, description); // id zero due to auto-increment
+                InventoryItem newItem = new InventoryItem(nameString, 0, quantity, categoryString, price, descriptionString); // id zero due to auto-increment
                 inventoryDatabase.insertInventoryItem(newItem);
 
                 // Refresh the list in the RecyclerView

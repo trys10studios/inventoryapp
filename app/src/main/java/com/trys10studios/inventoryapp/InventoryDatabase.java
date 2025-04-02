@@ -88,6 +88,8 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("name", updatedItem.getItemName());
         values.put("quantity", updatedItem.getItemQuantity());
+        values.put("category", updatedItem.getItemCategory());
+        values.put("price", updatedItem.getItemPrice());
         values.put("description", updatedItem.getItemDescription());
 
         db.update("inventory", values, "_id = ?", new String[]{String.valueOf(updatedItem.getItemId())});

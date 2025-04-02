@@ -34,6 +34,25 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/full_id_number"/>
     <TextView
+        android:id="@+id/full_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/category"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/full_quantity"/>
+    <TextView
+        android:id="@+id/full_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:text="@string/price"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/full_category"/>
+    <TextView
         android:id="@+id/full_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +61,7 @@
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/full_quantity"/>
+        app:layout_constraintTop_toBottomOf="@id/full_price"/>
 
     <Button
         android:id="@+id/close_button"
