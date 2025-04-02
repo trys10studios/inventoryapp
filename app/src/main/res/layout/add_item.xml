@@ -30,6 +30,30 @@
         app:layout_constraintTop_toTopOf="@id/item_name"
         app:layout_constraintBottom_toBottomOf="@id/item_name"/>
 
+    <!-- SKU TextView -->
+    <TextView
+        android:id="@+id/sku"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sku"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_name" />
+
+    <!-- SKU EditText -->
+    <EditText
+        android:id="@+id/sku_num"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/quantity_count"
+        android:textSize="25sp"
+        android:inputType="text"
+        app:layout_constraintStart_toEndOf="@id/sku"
+        app:layout_constraintTop_toTopOf="@id/sku"
+        app:layout_constraintBottom_toBottomOf="@id/sku"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Quantity TextView -->
     <TextView
         android:id="@+id/quantity"
@@ -38,7 +62,7 @@
         android:text="@string/quantity"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_name" />
+        app:layout_constraintTop_toBottomOf="@id/sku" />
 
     <!-- Quantity Count EditText -->
     <EditText

@@ -16,6 +16,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
     <TextView
+        android:id="@+id/full_sku"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sku"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/full_item_name"/>
+    <TextView
         android:id="@+id/full_id_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +32,7 @@
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/full_item_name"/>
+        app:layout_constraintTop_toBottomOf="@id/full_sku"/>
     <TextView
         android:id="@+id/full_quantity"
         android:layout_width="match_parent"
@@ -73,6 +82,6 @@
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/full_description" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
