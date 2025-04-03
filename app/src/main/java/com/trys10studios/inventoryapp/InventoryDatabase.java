@@ -25,7 +25,7 @@ public class InventoryDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create the "inventory" table
         db.execSQL("CREATE TABLE inventory (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT, quantity INTEGER, sku TEXT, category TEXT, price INTEGER, description TEXT)");
+                "name TEXT, quantity INTEGER, sku TEXT, category TEXT, price REAL, description TEXT)");
     }
 
     @Override
@@ -58,13 +58,13 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         List<InventoryItem> itemList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM inventory", null);
+        Cursor cursor = db.rawQuery("SELECT _id, name, quantity, sku, category, price, description FROM inventory", null);
 
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
-                String sku = cursor.getString(cursor.getColumnIndexOrThrow("sku"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String sku = cursor.getString(cursor.getColumnIndexOrThrow("sku"));
                 int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
                 String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
                 int price = cursor.getInt(cursor.getColumnIndexOrThrow("price"));

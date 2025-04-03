@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,10 +53,13 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             }
         });
 
+        holder.itemID.setText(String.valueOf(currentItem.getItemId()));
         holder.itemName.setText(currentItem.getItemName());
         holder.itemQuantity.setText(String.valueOf(currentItem.getItemQuantity()));
+        holder.itemSKU.setText(String.valueOf(currentItem.getSku()));
+        holder.itemCategory.setText(String.valueOf(currentItem.getItemCategory()));
+        holder.itemPrice.setText(String.valueOf(currentItem.getItemPrice()));
         holder.itemDescription.setText(shortenText(currentItem.getItemDescription()));
-        holder.itemID.setText(String.valueOf(currentItem.getItemId()));
 
         // Increase button functionality
         holder.increaseButton.setOnClickListener(v -> {
@@ -155,7 +157,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         builder.setView(view);
 
         TextView nameInput = view.findViewById(R.id.item_name_input);
-        TextView sku = view.findViewById(R.id.sku_num);
+        TextView sku = view.findViewById(R.id.sku_input);
         TextView quantity = view.findViewById(R.id.quantity_count);
         TextView category = view.findViewById(R.id.category_input);
         TextView price = view.findViewById(R.id.price_input);
@@ -230,10 +232,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
             // Update UI in the main list
             holder.itemName.setText(updatedItem.getItemName());
+            holder.itemSKU.setText(updatedItem.getSku());
             holder.itemQuantity.setText(String.valueOf(updatedItem.getItemQuantity()));
             holder.itemPrice.setText(String.valueOf(updatedItem.getItemPrice()));
             holder.itemCategory.setText(updatedItem.getItemCategory());
-            holder.itemSKU.setText(updatedItem.getSku());
             holder.itemDescription.setText(updatedItem.getItemDescription());
 
             // Notify adapter of the change

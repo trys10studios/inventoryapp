@@ -25,7 +25,8 @@
     <string name="edit_item" >Edit Item</string>
     <string name="close_button">Close</string>
     <string name="sku">SKU: </string>
-    <string name="sku_num">A0</string>
+    <string name="sku_input">A0</string>
+    <string name="sku_num">0</string>
     <string name="price">Price: $</string>
     <string name="price_num">0</string>
     <string name="category">Category: </string>

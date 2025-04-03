@@ -33,7 +33,7 @@ public class InventoryItem {
     public void setSKU(String newSKU) { sku = newSKU; }
     public void setCategory(String newCategory) { category = newCategory; }
     public void setPrice(int newPrice){
-        quantity = newPrice;
+        price = newPrice;
     }
     public void setDescription(String newDescription){
         description = newDescription;

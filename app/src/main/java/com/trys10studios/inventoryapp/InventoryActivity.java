@@ -185,18 +185,18 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         builder.setPositiveButton("Add", (dialog, which) -> {
             // Get user input
             EditText itemNameInput = customLayout.findViewById(R.id.item_name_input);
+            EditText itemSKUInput = customLayout.findViewById(R.id.sku_input);
             EditText itemQuantityInput = customLayout.findViewById(R.id.quantity_count);
-            EditText itemSKUInput = customLayout.findViewById(R.id.sku_num);
-            EditText itemDescriptionInput = customLayout.findViewById(R.id.item_description_input);
             EditText itemCategoryInput = customLayout.findViewById(R.id.category_input);
             EditText itemPriceInput = customLayout.findViewById(R.id.price_input);
+            EditText itemDescriptionInput = customLayout.findViewById(R.id.item_description_input);
 
             String nameString = itemNameInput.getText().toString();
-            String quantityString = itemQuantityInput.getText().toString();
             String skuString = itemSKUInput.getText().toString();
-            String descriptionString = itemDescriptionInput.getText().toString();
+            String quantityString = itemQuantityInput.getText().toString();
             String categoryString = itemCategoryInput.getText().toString();
             String priceString = itemPriceInput.getText().toString();
+            String descriptionString = itemDescriptionInput.getText().toString();
 
             try {
                 int quantity = Integer.parseInt(quantityString);
