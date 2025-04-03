@@ -161,6 +161,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         TextView price = view.findViewById(R.id.price_input);
         TextView descriptionInput = view.findViewById(R.id.item_description_input);
 
+        // Populate initial values
         nameInput.setText(item.getItemName());
         sku.setText(item.getSku());
         quantity.setText(String.valueOf(item.getItemQuantity()));
@@ -174,20 +175,16 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Validation for "Save" button listener
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String newItemName = nameInput.getText().toString().trim();
+            String newSku = sku.getText().toString().trim();
+            String newCategory = category.getText().toString().trim();
+            String newDescription = descriptionInput.getText().toString().trim();
             String quantityStr = quantity.getText().toString().trim();
             String priceStr = price.getText().toString().trim();
-            String newCategory = category.getText().toString().trim();
-            String newSku = sku.getText().toString().trim();
 
-            // Ensure the fields are **not empty** before parsing
-            if (quantityStr.isEmpty()) {
-                Toast.makeText(context, "Quantity cannot be empty", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (priceStr.isEmpty()) {
-                Toast.makeText(context, "Price cannot be empty", Toast.LENGTH_SHORT).show();
+            if (quantityStr.isEmpty() || priceStr.isEmpty()) {
+                Toast.makeText(context, "Quantity and Price cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -214,18 +211,44 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
                 return;
             }
 
-            // UPDATE THE UI IMMEDIATELY
-            holder.itemQuantity.setText(String.valueOf(newQuantity));
-            holder.itemPrice.setText(String.valueOf(newPrice));
-            holder.itemCategory.setText(newCategory);
-            holder.itemSKU.setText(newSku);
+            // Update the item object
+            item.setItemName(newItemName);
+            item.setSKU(newSku);
+            item.setQuantity(newQuantity);
+            item.setPrice(newPrice);
+            item.setCategory(newCategory);
+            item.setDescription(newDescription);
 
-            // UPDATE DATABASE
+            // Update database
             inventoryDatabase.updateInventoryItem(item);
-            notifyItemChanged(position);
-            updateItemList(inventoryDatabase.getAllInventoryItems());
 
-            Log.d("EditDialog", "Item updated: " + item);
+            // Refresh full inventory list from database
+            List<InventoryItem> updatedList = inventoryDatabase.getAllInventoryItems();
+
+            // Get the updated item from the refreshed list
+            InventoryItem updatedItem = updatedList.get(position);
+
+            // Update UI within the dialog
+            nameInput.setText(updatedItem.getItemName());
+            sku.setText(updatedItem.getSku());
+            quantity.setText(String.valueOf(updatedItem.getItemQuantity()));
+            category.setText(updatedItem.getItemCategory());
+            price.setText(String.valueOf(updatedItem.getItemPrice()));
+            descriptionInput.setText(updatedItem.getItemDescription());
+
+            // Update UI in the main list
+            holder.itemName.setText(updatedItem.getItemName());
+            holder.itemQuantity.setText(String.valueOf(updatedItem.getItemQuantity()));
+            holder.itemPrice.setText(String.valueOf(updatedItem.getItemPrice()));
+            holder.itemCategory.setText(updatedItem.getItemCategory());
+            holder.itemSKU.setText(updatedItem.getSku());
+            holder.itemDescription.setText(updatedItem.getItemDescription());
+
+            // Notify adapter of the change
+            updateItemList(updatedList);
+            notifyItemChanged(position);
+
+            Log.d("EditDialog", "Updated Item: " + updatedItem);
             dialog.dismiss();
         });
     }
