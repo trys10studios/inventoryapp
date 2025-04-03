@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -91,22 +92,109 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             retrievePhoneNumber();
         }
 
+        // Declare necessary variables
+        Spinner spinnerSearchField = findViewById(R.id.spinnerSearchField);
         // Set up search functionality
         SearchView searchView = findViewById(R.id.search_view);
+
+        // Set up the Spinner (for Category, Price, etc.)
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[]{"All", "Category", "Price", "Name", "Quantity", "Description"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSearchField.setAdapter(adapter);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Optional: You can handle query submission here if needed
+                // Optional: Handle query submission here if needed
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Filter the inventory items based on the search query
-                filterItems(newText);
+                // Get the selected filter type from the Spinner
+                String selectedFilter = spinnerSearchField.getSelectedItem().toString();
+
+                // If the query is empty and "All" is selected, show all items
+                if (newText.isEmpty() && selectedFilter.equals("All")) {
+                    showAllItems(); // Show all items
+                } else {
+                    // Filter the inventory items based on the search query and selected filter type
+                    filterItems(newText, selectedFilter);
+                }
                 return true;
             }
         });
+    }
+
+    private void showAllItems() {
+        // Assuming 'itemList' contains all your inventory items
+        itemList = inventoryDatabase.getAllInventoryItems();
+        inventoryAdapter.updateItemList(itemList);  // Update the RecyclerView or list adapter with all items
+    }
+
+    // The method to filter items based on both the query and filter type
+    private void filterItems(String query, String filterType) {
+        // Assuming you have a list of inventory items, e.g., List<InventoryItem> inventoryItems
+        List<InventoryItem> filteredItems = new ArrayList<>();
+
+        for (InventoryItem item : itemList) {
+            boolean matches = false;
+
+            // Apply filtering logic based on the filter type
+            switch (filterType) {
+                case "Category":
+                    if (item.getItemCategory().toLowerCase().contains(query.toLowerCase())) {
+                        matches = true;
+                    }
+                    break;
+                case "Price":
+                    try {
+                        double price = Double.parseDouble(query);
+                        if (item.getItemPrice() == price) {
+                            matches = true;
+                        }
+                    } catch (NumberFormatException e) {
+                        // Handle invalid price format
+                    }
+                    break;
+                case "Name":
+                    if (item.getItemName().toLowerCase().contains(query.toLowerCase())) {
+                        matches = true;
+                    }
+                    break;
+                case "Quantity":
+                    try {
+                        int quantity = Integer.parseInt(query);
+                        if (item.getItemQuantity() == quantity) {
+                            matches = true;
+                        }
+                    } catch (NumberFormatException e) {
+                        // Handle invalid quantity format
+                    }
+                    break;
+                case "Description":
+                    if (item.getItemDescription().toLowerCase().contains(query.toLowerCase())) {
+                        matches = true;
+                    }
+                    break;
+                case "All":
+                default:
+                    // If "All" is selected, check all fields
+                    if (item.getItemCategory().toLowerCase().contains(query.toLowerCase()) ||
+                            item.getItemName().toLowerCase().contains(query.toLowerCase()) ||
+                            item.getItemDescription().toLowerCase().contains(query.toLowerCase())) {
+                        matches = true;
+                    }
+                    break;
+            }
+
+            if (matches) {
+                filteredItems.add(item);
+            }
+        }
+
+        // Update the displayed items (you may need to notify an adapter, e.g., RecyclerViewAdapter)
+        inventoryAdapter.updateItemList(filteredItems);
     }
 
     // This method filters the items based on the search query text

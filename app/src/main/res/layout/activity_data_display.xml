@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"/>
 
+    <!-- Spinner for selecting the filter type -->
+    <Spinner
+        android:id="@+id/spinnerSearchField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"/>
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="wrap_content"
