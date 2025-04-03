@@ -154,21 +154,19 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         View view = LayoutInflater.from(context).inflate(R.layout.add_item, null);
         builder.setView(view);
 
-        EditText nameInput = view.findViewById(R.id.item_name_input);
-        EditText sku = view.findViewById(R.id.sku_num);
-        EditText quantity = view.findViewById(R.id.quantity_count);
-        EditText category = view.findViewById(R.id.category_input);
-        EditText price = view.findViewById(R.id.price_input);
-        EditText descriptionInput = view.findViewById(R.id.item_description_input);
+        TextView nameInput = view.findViewById(R.id.item_name_input);
+        TextView sku = view.findViewById(R.id.sku_num);
+        TextView quantity = view.findViewById(R.id.quantity_count);
+        TextView category = view.findViewById(R.id.category_input);
+        TextView price = view.findViewById(R.id.price_input);
+        TextView descriptionInput = view.findViewById(R.id.item_description_input);
 
-        nameInput.setText(String.valueOf(item.getItemName()));
-        sku.setText(String.valueOf(item.getSku()));
+        nameInput.setText(item.getItemName());
+        sku.setText(item.getSku());
         quantity.setText(String.valueOf(item.getItemQuantity()));
-        category.setText(String.valueOf(item.getItemCategory()));
+        category.setText(item.getItemCategory());
         price.setText(String.valueOf(item.getItemPrice()));
-        descriptionInput.setText(String.valueOf(item.getItemDescription()));
-
-        Log.d("EditDialog", "Initial Quantity: " + item.getItemQuantity());
+        descriptionInput.setText(item.getItemDescription());
 
         builder.setPositiveButton("Save", null);
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -176,36 +174,58 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         AlertDialog dialog = builder.create();
         dialog.show();
 
+        // Validation for "Save" button listener
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            // Ensure latest input is captured
-            nameInput.clearFocus();
-            quantity.clearFocus();
-            category.clearFocus();
-            price.clearFocus();
-            sku.clearFocus();
-            descriptionInput.clearFocus();
+            String quantityStr = quantity.getText().toString().trim();
+            String priceStr = price.getText().toString().trim();
+            String newCategory = category.getText().toString().trim();
+            String newSku = sku.getText().toString().trim();
 
-            int newQuantity = Integer.parseInt(quantity.getText().toString());
-            int newPrice = Integer.parseInt(price.getText().toString());
-            String newCategory = category.getText().toString();
-            String newSku = sku.getText().toString();
+            // Ensure the fields are **not empty** before parsing
+            if (quantityStr.isEmpty()) {
+                Toast.makeText(context, "Quantity cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (priceStr.isEmpty()) {
+                Toast.makeText(context, "Price cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            item.setQuantity(newQuantity);
-            item.setPrice(newPrice);
-            item.setCategory(newCategory);
-            item.setSKU(newSku);
+            int newQuantity, newPrice;
+            try {
+                newQuantity = Integer.parseInt(quantityStr);
+                if (newQuantity < 0) {
+                    Toast.makeText(context, "Quantity cannot be negative", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(context, "Invalid quantity", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // 🔥 Update the ViewHolder directly
+            try {
+                newPrice = Integer.parseInt(priceStr);
+                if (newPrice < 0) {
+                    Toast.makeText(context, "Price cannot be negative", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(context, "Invalid price", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // UPDATE THE UI IMMEDIATELY
             holder.itemQuantity.setText(String.valueOf(newQuantity));
             holder.itemPrice.setText(String.valueOf(newPrice));
             holder.itemCategory.setText(newCategory);
             holder.itemSKU.setText(newSku);
 
+            // UPDATE DATABASE
             inventoryDatabase.updateInventoryItem(item);
             notifyItemChanged(position);
             updateItemList(inventoryDatabase.getAllInventoryItems());
 
-            Log.d("EditDialog", "Refreshing UI...");
+            Log.d("EditDialog", "Item updated: " + item);
             dialog.dismiss();
         });
     }
