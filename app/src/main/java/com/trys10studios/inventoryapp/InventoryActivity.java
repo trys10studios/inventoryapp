@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class InventoryActivity extends AppCompatActivity implements NotificationHandler {
+public class InventoryActivity extends AppCompatActivity implements NotificationHandler, InventoryAdapter.OnItemEditedListener {
     private InventoryDatabase inventoryDatabase;
     private InventoryAdapter inventoryAdapter;
     private List<InventoryItem> itemList;
@@ -70,7 +70,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
 
         // Fetch inventory items from the database
         itemList = inventoryDatabase.getAllInventoryItems(); // Store it in the member variable
-        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase, this);
+        inventoryAdapter = new InventoryAdapter(itemList, inventoryDatabase, this, this);
         recyclerView.setAdapter(inventoryAdapter);
         filteredItemList = new ArrayList<>(itemList);  // Initialize the filtered list
 
@@ -133,7 +133,7 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         });
     }
 
-    // This method filters the items based on the query text
+    // This method filters the items based on the search query text
     private void filterItems(String query) {
         // Clear the filtered list and add the matching items
         filteredItemList.clear();
@@ -151,6 +151,8 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         // Notify the adapter that the dataset has changed
         inventoryAdapter.notifyDataSetChanged();
     }
+
+    // This method filters the items based on the category
     private void filterInventory(String category) {
         List<InventoryItem> filteredList = new ArrayList<>();
 
@@ -357,5 +359,15 @@ public class InventoryActivity extends AppCompatActivity implements Notification
 
         // Show the notification
         notificationManager.notify(1, builder.build()); // Unique ID for each notification
+    }
+    @Override
+    public void onItemEdited() {
+        refreshData();  // Reload UI when an item is edited
+    }
+
+    public void refreshData() {
+        List<InventoryItem> newItemList = inventoryDatabase.getAllInventoryItems();
+        inventoryAdapter.updateItemList(newItemList);
+        adapter.notifyDataSetChanged();
     }
 }

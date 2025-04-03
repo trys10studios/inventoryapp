@@ -24,11 +24,13 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     private final InventoryDatabase inventoryDatabase;
     private final Context context; // Store the context
     private static final String CHANNEL_ID = "inventory_notifications";
+    private OnItemEditedListener editListener;
 
-    public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase, Context context) {
+    public InventoryAdapter(List<InventoryItem> itemList, InventoryDatabase inventoryDatabase, Context context, OnItemEditedListener editListener) {
         this.itemList = itemList;
         this.inventoryDatabase = inventoryDatabase;
         this.context = context; // Initialize the context
+        this.editListener = editListener;
     }
 
     @NonNull
@@ -42,6 +44,16 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         InventoryItem currentItem = itemList.get(position);
+
+        holder.editButton.setOnClickListener(v -> {
+            // Open edit dialog (or edit logic)
+            inventoryDatabase.updateInventoryItem(currentItem);
+
+            // Notify Activity to refresh the data
+            if (editListener != null) {
+                editListener.onItemEdited();
+            }
+        });
 
         holder.itemName.setText(currentItem.getItemName());
         holder.itemQuantity.setText(String.valueOf(currentItem.getItemQuantity()));
@@ -170,6 +182,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             String newPrice = price.getText().toString();
             String newDescription = descriptionInput.getText().toString();
 
+            // Fetch updated data from the database
+            List<InventoryItem> updatedItems = inventoryDatabase.getAllInventoryItems();
+            updateItemList(updatedItems);  // Update UI with fresh data
+
             // Validate quantity
             if (newQuantity.isEmpty()) {
                 // Show Toast if quantity is empty
@@ -212,7 +228,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView itemName, itemQuantity, itemCategory, itemPrice, itemDescription, itemID;
+        public TextView itemName, itemQuantity, itemSKU, itemCategory, itemPrice, itemDescription, itemID;
         public ImageButton increaseButton, decreaseButton, deleteButton;
         public Button fullViewButton, editButton;
 
@@ -221,8 +237,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             itemName = itemView.findViewById(R.id.item_name);
             itemID = itemView.findViewById(R.id.id_number);
             itemQuantity = itemView.findViewById(R.id.quantity_count);
-            itemCategory = itemView.findViewById(R.id.category);
-            itemPrice = itemView.findViewById(R.id.price);
+            itemSKU = itemView.findViewById(R.id.sku);
+            itemCategory = itemView.findViewById(R.id.category_name);
+            itemPrice = itemView.findViewById(R.id.price_num);
             itemDescription = itemView.findViewById(R.id.item_description);
             increaseButton = itemView.findViewById(R.id.increase_button);
             decreaseButton = itemView.findViewById(R.id.decrease_button);
@@ -251,5 +268,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         this.itemList = newItemList;
         notifyDataSetChanged();  // Notify the adapter that the list has changed
     }
-
+    public interface OnItemEditedListener {
+        void onItemEdited();
+    }
 }
