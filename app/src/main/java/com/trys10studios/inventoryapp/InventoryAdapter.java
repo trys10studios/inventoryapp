@@ -2,6 +2,7 @@ package com.trys10studios.inventoryapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -105,7 +104,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         });
 
         // Edit Button functionality
-        holder.editButton.setOnClickListener(v -> showEditDialog(currentItem, position));
+        holder.editButton.setOnClickListener(v -> showEditDialog(currentItem, position, holder));
         holder.fullViewButton.setOnClickListener(v -> showFullScreenDialog(currentItem));
     }
 
@@ -148,16 +147,13 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         });
     }
 
-
-    private void showEditDialog(InventoryItem item, int position) {
+    private void showEditDialog(InventoryItem item, int position, ViewHolder holder) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit Item");
 
-        // Inflate custom dialog layout
         View view = LayoutInflater.from(context).inflate(R.layout.add_item, null);
         builder.setView(view);
 
-        // Get references to input fields
         EditText nameInput = view.findViewById(R.id.item_name_input);
         EditText sku = view.findViewById(R.id.sku_num);
         EditText quantity = view.findViewById(R.id.quantity_count);
@@ -165,61 +161,53 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         EditText price = view.findViewById(R.id.price_input);
         EditText descriptionInput = view.findViewById(R.id.item_description_input);
 
-        // Populate fields with current item data
-        nameInput.setText(item.getItemName());
+        nameInput.setText(String.valueOf(item.getItemName()));
         sku.setText(String.valueOf(item.getSku()));
         quantity.setText(String.valueOf(item.getItemQuantity()));
-        category.setText(item.getItemCategory());
+        category.setText(String.valueOf(item.getItemCategory()));
         price.setText(String.valueOf(item.getItemPrice()));
-        descriptionInput.setText(item.getItemDescription());
+        descriptionInput.setText(String.valueOf(item.getItemDescription()));
 
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            // Get updated values
-            String newName = nameInput.getText().toString();
-            String newSKU = sku.getText().toString();
-            String newQuantity = quantity.getText().toString();
-            String newCategory = category.getText().toString();
-            String newPrice = price.getText().toString();
-            String newDescription = descriptionInput.getText().toString();
+        Log.d("EditDialog", "Initial Quantity: " + item.getItemQuantity());
 
-            // Fetch updated data from the database
-            List<InventoryItem> updatedItems = inventoryDatabase.getAllInventoryItems();
-            updateItemList(updatedItems);  // Update UI with fresh data
-
-            // Validate quantity
-            if (newQuantity.isEmpty()) {
-                // Show Toast if quantity is empty
-                Toast.makeText(context, "Quantity cannot be empty", Toast.LENGTH_SHORT).show();
-                return;  // Exit if quantity is empty
-            }
-
-            try {
-                Integer.parseInt(newQuantity);  // Try to parse the quantity as an integer
-            } catch (NumberFormatException e) {
-                // Show Toast if it's not a valid number
-                Toast.makeText(context, "Please enter a valid quantity", Toast.LENGTH_SHORT).show();
-                return;  // Exit if invalid quantity
-            }
-
-            // Update item
-            item.setItemName(newName);
-            item.setSKU(newSKU);
-            item.setQuantity(Integer.parseInt(newQuantity));
-            item.setDescription(newDescription);
-            item.setCategory(newCategory);
-            item.setPrice(Integer.parseInt(newPrice));
-
-            // Update database
-            inventoryDatabase.updateInventoryItem(item);
-
-            // Notify adapter that item has changed
-            notifyItemChanged(position);
-        });
-
+        builder.setPositiveButton("Save", null);
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-        // Show the dialog
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            // Ensure latest input is captured
+            nameInput.clearFocus();
+            quantity.clearFocus();
+            category.clearFocus();
+            price.clearFocus();
+            sku.clearFocus();
+            descriptionInput.clearFocus();
+
+            int newQuantity = Integer.parseInt(quantity.getText().toString());
+            int newPrice = Integer.parseInt(price.getText().toString());
+            String newCategory = category.getText().toString();
+            String newSku = sku.getText().toString();
+
+            item.setQuantity(newQuantity);
+            item.setPrice(newPrice);
+            item.setCategory(newCategory);
+            item.setSKU(newSku);
+
+            // 🔥 Update the ViewHolder directly
+            holder.itemQuantity.setText(String.valueOf(newQuantity));
+            holder.itemPrice.setText(String.valueOf(newPrice));
+            holder.itemCategory.setText(newCategory);
+            holder.itemSKU.setText(newSku);
+
+            inventoryDatabase.updateInventoryItem(item);
+            notifyItemChanged(position);
+            updateItemList(inventoryDatabase.getAllInventoryItems());
+
+            Log.d("EditDialog", "Refreshing UI...");
+            dialog.dismiss();
+        });
     }
 
     @Override
@@ -237,7 +225,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             itemName = itemView.findViewById(R.id.item_name);
             itemID = itemView.findViewById(R.id.id_number);
             itemQuantity = itemView.findViewById(R.id.quantity_count);
-            itemSKU = itemView.findViewById(R.id.sku);
+            itemSKU = itemView.findViewById(R.id.sku_num);
             itemCategory = itemView.findViewById(R.id.category_name);
             itemPrice = itemView.findViewById(R.id.price_num);
             itemDescription = itemView.findViewById(R.id.item_description);
@@ -265,7 +253,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         return string;  // Return the TextView for chaining or further use
     }
     public void updateItemList(List<InventoryItem> newItemList) {
-        this.itemList = newItemList;
+        itemList.clear();  // Keep the same reference
+        itemList.addAll(newItemList);
         notifyDataSetChanged();  // Notify the adapter that the list has changed
     }
     public interface OnItemEditedListener {
