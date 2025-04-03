@@ -228,14 +228,6 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             // Get the updated item from the refreshed list
             InventoryItem updatedItem = updatedList.get(position);
 
-            // Update UI within the dialog
-            nameInput.setText(updatedItem.getItemName());
-            sku.setText(updatedItem.getSku());
-            quantity.setText(String.valueOf(updatedItem.getItemQuantity()));
-            category.setText(updatedItem.getItemCategory());
-            price.setText(String.valueOf(updatedItem.getItemPrice()));
-            descriptionInput.setText(updatedItem.getItemDescription());
-
             // Update UI in the main list
             holder.itemName.setText(updatedItem.getItemName());
             holder.itemQuantity.setText(String.valueOf(updatedItem.getItemQuantity()));
