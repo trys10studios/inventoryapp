@@ -13,8 +13,11 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -28,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class InventoryActivity extends AppCompatActivity implements NotificationHandler {
@@ -39,6 +43,9 @@ public class InventoryActivity extends AppCompatActivity implements Notification
     private static final int REQUEST_CODE_PHONE_STATE = 1;
     private static final int REQUEST_CODE_SMS = 2; // Add this constant for SMS permission
     private List<InventoryItem> filteredItemList;  // Add a filtered list for search results
+    Spinner spinnerCategory;
+    ArrayAdapter<String> adapter;
+    List<String> categories = Arrays.asList("All");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +111,26 @@ public class InventoryActivity extends AppCompatActivity implements Notification
                 return true;
             }
         });
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+
+        // Set up Spinner Adapter
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(adapter);
+
+        // Handle selection
+        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = categories.get(position);
+                filterInventory(selectedCategory);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
     }
 
     // This method filters the items based on the query text
@@ -123,6 +150,18 @@ public class InventoryActivity extends AppCompatActivity implements Notification
         inventoryAdapter.updateItemList(filteredItemList);
         // Notify the adapter that the dataset has changed
         inventoryAdapter.notifyDataSetChanged();
+    }
+    private void filterInventory(String category) {
+        List<InventoryItem> filteredList = new ArrayList<>();
+
+        for (InventoryItem item : itemList) {
+            if (category.equals("All") || item.getItemCategory().equals(category)) {
+                filteredList.add(item);
+            }
+        }
+
+        // Update RecyclerView Adapter
+        inventoryAdapter.updateItemList(filteredList);
     }
 
     private void promptForPhoneNumber() {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,5 +139,28 @@ public class InventoryDatabase extends SQLiteOpenHelper {
         db.close();
         return resultList;
     }
+    public void addCategoryIfNotExists(String categoryName) {
+        SQLiteDatabase db = getWritableDatabase();
 
+        // Check if the category already exists
+        String checkQuery = "SELECT category_id FROM categories WHERE category_name = ?";
+        Cursor cursor = db.rawQuery(checkQuery, new String[]{categoryName});
+
+        if (cursor.getCount() == 0) {
+            // Category doesn't exist, insert it
+            ContentValues values = new ContentValues();
+            values.put("category_name", categoryName);
+            long newRowId = db.insert("categories", null, values);
+            if (newRowId != -1) {
+                // Successfully added
+                Log.d("Database", "New category added: " + categoryName);
+            }
+        } else {
+            // Category already exists, you can handle this case if needed
+            Log.d("Database", "Category already exists: " + categoryName);
+        }
+
+        cursor.close();
+        db.close();
+    }
 }
