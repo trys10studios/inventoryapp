@@ -13,6 +13,7 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class InventoryActivity extends AppCompatActivity implements NotificationHandler, InventoryAdapter.OnItemEditedListener {
@@ -124,17 +124,35 @@ public class InventoryActivity extends AppCompatActivity implements Notification
                 return true;
             }
         });
+        spinnerSearchField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedFilter = spinnerSearchField.getSelectedItem().toString();
+                String currentQuery = searchView.getQuery().toString().trim(); // Get the current text
+
+                if (currentQuery.isEmpty() && selectedFilter.equals("All")) {
+                    showAllItems();
+                } else {
+                    filterItems(currentQuery, selectedFilter);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
     }
 
     private void showAllItems() {
-        // Assuming 'itemList' contains all your inventory items
+        // Assuming 'itemList' contains all inventory items
         itemList = inventoryDatabase.getAllInventoryItems();
         inventoryAdapter.updateItemList(itemList);  // Update the RecyclerView or list adapter with all items
     }
 
     // The method to filter items based on both the query and filter type
     private void filterItems(String query, String filterType) {
-        // Assuming you have a list of inventory items, e.g., List<InventoryItem> inventoryItems
+        // List of inventory items to be filtered
         List<InventoryItem> filteredItems = new ArrayList<>();
 
         for (InventoryItem item : itemList) {
@@ -193,27 +211,8 @@ public class InventoryActivity extends AppCompatActivity implements Notification
             }
         }
 
-        // Update the displayed items (you may need to notify an adapter, e.g., RecyclerViewAdapter)
+        // Update the displayed items and notify adapter
         inventoryAdapter.updateItemList(filteredItems);
-    }
-
-    // This method filters the items based on the search query text
-    private void filterItems(String query) {
-        // Clear the filtered list and add the matching items
-        filteredItemList.clear();
-        if (query.isEmpty()) {
-            filteredItemList.addAll(itemList);  // If the query is empty, show all items
-        } else {
-            for (InventoryItem item : itemList) {
-                if (item.getItemName().toLowerCase().contains(query.toLowerCase())) {
-                    filteredItemList.add(item);  // Add the items that match the query
-                }
-            }
-        }
-        // Update the adapter's list and notify the RecyclerView
-        inventoryAdapter.updateItemList(filteredItemList);
-        // Notify the adapter that the dataset has changed
-        inventoryAdapter.notifyDataSetChanged();
     }
 
     // This method filters the items based on the category

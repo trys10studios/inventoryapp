@@ -109,58 +109,6 @@ public class InventoryDatabase extends SQLiteOpenHelper {
             String message = "Alert: Some items in your inventory are at zero stock!";
             notificationHandler.sendSms(message); // Use notification handler to send notification
         }
-
         cursor.close();
-    }
-    public List<InventoryItem> searchInventoryItems(String query) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<InventoryItem> resultList = new ArrayList<>();
-
-        // Simple query to search in name or description
-        String selection = "name LIKE ? OR description LIKE ?";
-        String[] selectionArgs = new String[]{"%" + query + "%", "%" + query + "%"};
-
-        Cursor cursor = db.query(DATABASE_NAME, null, selection, selectionArgs, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                String sku = cursor.getString(cursor.getColumnIndexOrThrow("sku"));
-                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow("quantity"));
-                String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
-                int price = cursor.getInt(cursor.getColumnIndexOrThrow("price"));
-                String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
-
-                // Add matching item to result list
-                resultList.add(new InventoryItem(name, 0, quantity, sku, category, price, description)); // Assuming you have constructor
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-        db.close();
-        return resultList;
-    }
-    public void addCategoryIfNotExists(String categoryName) {
-        SQLiteDatabase db = getWritableDatabase();
-
-        // Check if the category already exists
-        String checkQuery = "SELECT category_id FROM categories WHERE category_name = ?";
-        Cursor cursor = db.rawQuery(checkQuery, new String[]{categoryName});
-
-        if (cursor.getCount() == 0) {
-            // Category doesn't exist, insert it
-            ContentValues values = new ContentValues();
-            values.put("category_name", categoryName);
-            long newRowId = db.insert("categories", null, values);
-            if (newRowId != -1) {
-                // Successfully added
-                Log.d("Database", "New category added: " + categoryName);
-            }
-        } else {
-            // Category already exists, you can handle this case if needed
-            Log.d("Database", "Category already exists: " + categoryName);
-        }
-
-        cursor.close();
-        db.close();
     }
 }
