@@ -8,8 +8,8 @@
     <string name="add_new_item">Add New Item</string>
     <string name="delete">Delete</string>
     <string name="item">Item: </string>
-    <string name="item_name">Item Name: </string>
-    <string name="quantity">Qty:</string>
+    <string name="item_name">Item Name</string>
+    <string name="quantity">Qty: </string>
     <string name="description">Description: </string>
     <string name="item_quantity">0</string>
     <string name="item_description">Item Description: </string>
@@ -21,4 +21,14 @@
     <string name="id">ID: </string>
     <string name="remove_item">Remove Item</string>
     <string name="description_placeholder">Description Placeholder</string>
+    <string name="full_view">Full View</string>
+    <string name="edit_item" >Edit Item</string>
+    <string name="close_button">Close</string>
+    <string name="sku">SKU: </string>
+    <string name="sku_input">A0</string>
+    <string name="sku_num">0</string>
+    <string name="price">Price: $</string>
+    <string name="price_num">0</string>
+    <string name="category">Category: </string>
+    <string name="category_placeholder">Category Placeholder</string>
 </resources>

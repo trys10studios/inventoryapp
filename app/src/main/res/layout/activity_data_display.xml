@@ -7,7 +7,26 @@
     android:padding="8dp" >
 
     <!-- Logout button -->
-    <include layout="@layout/logout_button" />
+    <include layout="@layout/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"/>
+
+    <!-- Spinner for selecting the filter type -->
+    <Spinner
+        android:id="@+id/spinnerSearchField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"/>
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="wrap_content"
+        android:minWidth="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:queryHint="Search items..." />
 
     <!-- Title Bar -->
     <TextView
@@ -22,7 +41,7 @@
 
     <!-- RecyclerView for displaying the data -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

@@ -28,17 +28,115 @@
         <!--Item Name Text -->
         <TextView
             android:id="@+id/item_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="@string/item"
+            android:text="@string/item_name"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--Category Text-->
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/category"
             android:textAlignment="gravity"
             android:textSize="25sp"
             app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+        <!--Category Number Text -->
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/category_placeholder"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <!--Layout for individual sku numbers in Recycler View-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--SKU Text-->
+        <TextView
+            android:id="@+id/sku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/sku"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--SKU Number Text -->
+        <TextView
+            android:id="@+id/sku_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/sku_num"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <!--Layout for individual Price in Recycler View-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--Price Text-->
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="@string/price"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Price Number Text -->
+        <TextView
+            android:id="@+id/price_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/price_num"
+            android:textAlignment="gravity"
+            android:textSize="25sp"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
     <!-- Horizontal Layout for Item and Quantity Information -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,7 +193,7 @@
 
         <!--Increase Quantity Button-->
         <ImageButton
-            android:id="@+id/increaseButton"
+            android:id="@+id/increase_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="50dp"
@@ -111,7 +209,7 @@
 
         <!--Decrease Quantity Button-->
         <ImageButton
-            android:id="@+id/decreaseButton"
+            android:id="@+id/decrease_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="50dp"
@@ -132,7 +230,7 @@
 
             <!--Delete Button-->
             <ImageButton
-                android:id="@+id/deleteButton"
+                android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="50dp"
@@ -162,4 +260,47 @@
         android:textSize="25sp"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Horizontal Layout for Full View and Edit Item Information -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+    <Button
+        android:id="@id/full_view_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="155dp"
+        android:maxWidth="60dp"
+        android:minHeight="50dp"
+        android:maxHeight="60dp"
+        android:text="@string/full_view"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/full_view"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <Button
+        android:id="@id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="150dp"
+        android:maxWidth="60dp"
+        android:minHeight="50dp"
+        android:maxHeight="60dp"
+        android:text="@string/edit_item"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/edit_item"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    </LinearLayout>
 </LinearLayout>

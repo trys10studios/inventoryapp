@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="id" type="id"/>
+    <item name="quantity" type="id"/>
+    <item name="quantity_count" type="id"/>
+    <item name="increase_button" type="id"/>
+    <item name="decrease_button" type="id"/>
+    <item name="delete_button" type="id"/>
+    <item name="item_description" type="id"/>
+    <item name="full_view_button" type="id"/>
+    <item name="edit_button" type="id"/>
+
+</resources>

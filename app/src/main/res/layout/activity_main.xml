@@ -8,14 +8,14 @@
 
     <!--User Name Edit Text-->
     <EditText
-        android:id="@+id/enterUserName"
-        android:layout_width="300sp"
+        android:id="@+id/enter_user_name"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40sp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/enterPassword"
+        app:layout_constraintBottom_toTopOf="@id/enter_password"
         android:textSize="30sp"
         android:hint="@string/enter_user_name"
         android:autofillHints="username"
@@ -23,13 +23,13 @@
 
     <!--Password Edit Text-->
     <EditText
-        android:id="@+id/enterPassword"
-        android:layout_width="300sp"
+        android:id="@+id/enter_password"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/loginButton"
-        app:layout_constraintTop_toTopOf="@id/enterUserName"
+        app:layout_constraintBottom_toBottomOf="@id/login_button"
+        app:layout_constraintTop_toTopOf="@id/enter_user_name"
         android:textSize="30sp"
         android:hint="@string/enter_password"
         android:autofillHints="password"
@@ -37,44 +37,44 @@
 
     <!--Login Button-->
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40sp"
+        android:layout_marginTop="40dp"
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/createAccount"
-        app:layout_constraintTop_toBottomOf="@id/enterPassword"
+        app:layout_constraintBottom_toTopOf="@id/create_account"
+        app:layout_constraintTop_toBottomOf="@id/enter_password"
         android:textSize="30sp"
         android:textColor="@color/white" />
 
     <!--Create Account Button-->
     <Button
-        android:id="@+id/createAccount"
+        android:id="@+id/create_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40sp"
+        android:layout_marginTop="40dp"
         android:text="@string/create_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButton"
+        app:layout_constraintTop_toBottomOf="@id/login_button"
         android:textSize="30sp"
         android:textColor="@color/white" />
 
     <!-- TextView for displaying error messages -->
     <TextView
-        android:id="@+id/errorTextView"
+        android:id="@+id/error_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text=""
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/createAccount"
-        app:layout_constraintEnd_toEndOf="@id/createAccount"
-        app:layout_constraintTop_toBottomOf="@+id/createAccount"
+        app:layout_constraintStart_toStartOf="@id/create_account"
+        app:layout_constraintEnd_toEndOf="@id/create_account"
+        app:layout_constraintTop_toBottomOf="@+id/create_account"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

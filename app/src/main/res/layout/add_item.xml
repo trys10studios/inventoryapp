@@ -30,6 +30,30 @@
         app:layout_constraintTop_toTopOf="@id/item_name"
         app:layout_constraintBottom_toBottomOf="@id/item_name"/>
 
+    <!-- SKU TextView -->
+    <TextView
+        android:id="@+id/sku"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sku"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_name" />
+
+    <!-- SKU EditText -->
+    <EditText
+        android:id="@+id/sku_input"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/sku_num"
+        android:textSize="25sp"
+        android:inputType="text"
+        app:layout_constraintStart_toEndOf="@id/sku"
+        app:layout_constraintTop_toTopOf="@id/sku"
+        app:layout_constraintBottom_toBottomOf="@id/sku"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Quantity TextView -->
     <TextView
         android:id="@+id/quantity"
@@ -38,7 +62,7 @@
         android:text="@string/quantity"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_name" />
+        app:layout_constraintTop_toBottomOf="@id/sku" />
 
     <!-- Quantity Count EditText -->
     <EditText
@@ -54,6 +78,54 @@
         app:layout_constraintBottom_toBottomOf="@id/quantity"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Category TextView -->
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/category"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quantity" />
+
+    <!-- Category EditText -->
+    <EditText
+        android:id="@+id/category_input"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/category_placeholder"
+        android:textSize="25sp"
+        android:inputType="text"
+        app:layout_constraintStart_toEndOf="@id/category"
+        app:layout_constraintTop_toTopOf="@id/category"
+        app:layout_constraintBottom_toBottomOf="@id/category"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Price TextView -->
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category" />
+
+    <!-- Price EditText -->
+    <EditText
+        android:id="@+id/price_input"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:hint="@string/price_num"
+        android:textSize="25sp"
+        android:inputType="text"
+        app:layout_constraintStart_toEndOf="@id/price"
+        app:layout_constraintTop_toTopOf="@id/price"
+        app:layout_constraintBottom_toBottomOf="@id/price"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Item Description TextView -->
     <TextView
         android:id="@+id/item_description"
@@ -62,7 +134,7 @@
         android:text="Item Description"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quantity"/>
+        app:layout_constraintTop_toBottomOf="@id/price"/>
 
     <!-- Item Description EditText -->
     <EditText
@@ -76,6 +148,6 @@
         app:layout_constraintStart_toEndOf="@id/item_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/item_description"
-        app:layout_constraintTop_toBottomOf="@id/quantity"/>
+        app:layout_constraintTop_toBottomOf="@id/price_input"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
